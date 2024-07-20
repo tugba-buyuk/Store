@@ -1,0 +1,23 @@
+﻿@model ProductListViewModel
+
+
+<div class="row w-100 justify-content-between">
+    <div class="col-md-2">
+        @await Component.InvokeAsync("CategoriesMenu")
+        @await Component.InvokeAsync("ProductFilterMenu")
+        <lastest-product number="6"></lastest-product>
+    </div>
+    <div class="col-md-9">
+        <div class="row my-3">
+            @foreach (Product prd in Model.Products)
+            {
+                <partial name="_ProductCard" model="@prd" />
+            }
+            <div class="text-center">
+                <div page-model="@Model?.Pagination" page-action="Index" page-classes-enabled="true" page-class="btn"
+                     page-class-normal="btn-outline-dark" page-class-selected="btn-secondary" class="btn-group">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

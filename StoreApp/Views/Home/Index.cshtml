@@ -1,0 +1,302 @@
+﻿@* @await Component.InvokeAsync("ShowCase") *@
+@using Microsoft.EntityFrameworkCore
+@model IEnumerable<Product>
+
+<partial name="_Slider" />
+
+<partial name="_Banner" />
+
+<section style="background-color:#f5f5f5;padding-top: 7.5rem;
+    padding-bottom: 7.5rem;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-12" style="background-color: #eee;padding: 1.8rem !important">
+                <div class="d-flex flex-column justify-content-center w-100" style="height:100%">
+                    <h4 style="color: #616161 !important;font-size: 1.44rem;font-weight:700;">Everyday collection 2021</h4>
+                    <h1 style="font-size: 3rem !important;font-weight: 600 !important;    line-height: 1.25 !important;">Be yourself</h1>
+                    <p style="    font-size: 1.2rem !important;margin-bottom:3rem;">The ideal selection for your everyday use ina Super Saver range within a reasonable price range is here for you to keep you stay steady % trendy.</p>
+                    <a class="btn btn-lg btn-dark w-25" style="border-radius:0" href="#" role="button">Explore</a>
+                </div>
+            </div>
+            <div class="col-md-6 col-12 p-0">
+                <div class="image-container w-100">
+                    <img src="~/images/outfit.png" class="w-100" />
+                    <div class="overlay">
+                        <a style="color:#FFF">
+                            Outfit
+                            <i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row pt-4">
+            <div class="col-md-4" style="padding-left:0px;">
+                <div class="w-100 cat-img" style="height:100%">
+                    <img src="~/images/vanity-bag.png" class="w-100 " style="height:100%" />
+                    <div class="overlay">
+                        <a style="color:#FFF">
+                            Vanity Bags
+                            <i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="cat-img w-100" style="height:100%">
+                    <img src="~/images/hat.png" class="w-100" style="height:100%" />
+                    <div class="overlay">
+                        <a style="color:#FFF">
+                            Vanity Bags
+                            <i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" style="padding-right:0px;">
+                <div class="w-100 cat-img" style="height:100%">
+                    <img src="~/images/high-heels.png" class="w-100" style="height:100%" />
+                    <div class="overlay">
+                        <a style="color:#FFF">
+                            Vanity Bags
+                            <i class="fa-solid fa-arrow-right" style="color: #ffffff;"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="section-space py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-7 mx-auto text-center mb-5">
+                <h5 class="fw-bold fs-3 fs-lg-5 lh-sm mb-3">Shop By Category</h5>
+            </div>
+            <div class="col-12">
+                <div class="product-section-title">
+                    <ul class="nav nav-pills d-flex justify-content-center" id="genderTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="women-tab" data-bs-toggle="tab" href="#women" role="tab" aria-controls="women" aria-selected="true" style="font-size:20px;">Kadın</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="men-tab" data-bs-toggle="tab" href="#men" role="tab" aria-controls="men" aria-selected="false" style="font-size:20px;">Erkek</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content mt-3" id="genderTabContent">
+                        <!-- Kadın Tabı İçeriği -->
+                        <div class="tab-pane fade show active" id="women" role="tabpanel" aria-labelledby="women-tab">
+                            <ul class="nav nav-pills d-flex justify-content-center" id="womenCategoryTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="women-shoes-tab" data-bs-toggle="tab" href="#women-shoes" role="tab" aria-controls="women-shoes" aria-selected="true">Ayakkabı</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="women-shirts-tab" data-bs-toggle="tab" href="#women-shirts" role="tab" aria-controls="women-shirts" aria-selected="false">Tişört</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="women-pants-tab" data-bs-toggle="tab" href="#women-pants" role="tab" aria-controls="women-pants" aria-selected="false">Pantolon</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content mt-3" id="womenCategoryTabContent">
+                                <div class="tab-pane fade show active" id="women-shoes" role="tabpanel" aria-labelledby="women-shoes-tab">
+                                    <div class="row mb-4 g-3 product-append">
+                                        @{
+                                            var womenShoesList = Model.Where(i => i.Gender == "Women" && i.Category.CategoryName == "Shoes");
+
+                                        }
+                                        @foreach (Product prd in womenShoesList)
+                                        {
+                                            <partial name="_ProductCard" model="prd" />
+                                        }
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="women-shirts" role="tabpanel" aria-labelledby="women-shirts-tab">
+                                    <div class="row mb-4 g-3 product-append">
+                                        <!-- Kadın Tişört ürünleri burada oluşturulacak -->
+                                        @{
+                                            var womenTShirtList = Model.Where(i => i.Gender == "Women" && i.Category.CategoryName == "T-Shirt");
+
+                                        }
+                                        @foreach (Product prd in womenTShirtList)
+                                        {
+                                            <partial name="_ProductCard" model="prd" />
+                                        }
+                                        
+                                        
+                                    </div>
+                                    <div class="col-12 d-flex justify-content-center mt-4">
+                                        <a class="btn btn-lg btn-dark" href="#!">View All </a>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="women-pants" role="tabpanel" aria-labelledby="women-pants-tab">
+                                    <div class="row mb-4 g-3 product-append">
+                                        @{
+                                            var womenPantList = Model.Where(i => i.Gender == "Women" && i.Category.CategoryName == "Pant");
+
+                                        }
+                                        @foreach (Product prd in womenTShirtList)
+                                        {
+                                            <partial name="_ProductCard" model="prd" />
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Erkek Tabı İçeriği -->
+                        <div class="tab-pane fade" id="men" role="tabpanel" aria-labelledby="men-tab">
+                            <ul class="nav nav-pills d-flex justify-content-center" id="menCategoryTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="men-shoes-tab" data-bs-toggle="tab" href="#men-shoes" role="tab" aria-controls="men-shoes" aria-selected="true">Ayakkabı</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="men-shirts-tab" data-bs-toggle="tab" href="#men-shirts" role="tab" aria-controls="men-shirts" aria-selected="false">Tişört</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="men-pants-tab" data-bs-toggle="tab" href="#men-pants" role="tab" aria-controls="men-pants" aria-selected="false">Pantolon</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content mt-3" id="menCategoryTabContent">
+                                <div class="tab-pane fade show active" id="men-shoes" role="tabpanel" aria-labelledby="men-shoes-tab">
+                                    <div class="row mb-4 g-3 product-append">
+                                        @{
+                                            var menShoesList = Model.Where(i => i.Gender == "Men" && i.Category.CategoryName == "Shoes");
+
+                                        }
+                                        @foreach (Product prd in menShoesList)
+                                        {
+                                            <partial name="_ProductCard" model="prd" />
+                                        }
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="men-shirts" role="tabpanel" aria-labelledby="men-shirts-tab">
+                                    <div class="row mb-4 g-3 product-append">
+                                        @{
+                                            var menTShirtList = Model.Where(i => i.Gender == "Men" && i.Category.CategoryName == "T-Shirt");
+
+                                        }
+                                        @foreach (Product prd in menTShirtList)
+                                        {
+                                            <partial name="_ProductCard" model="prd" />
+                                        }
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="men-pants" role="tabpanel" aria-labelledby="men-pants-tab">
+                                    <div class="row mb-4 g-3 product-append">
+                                        @{
+                                            var menPantList = Model.Where(i => i.Gender == "Men" && i.Category.CategoryName == "Pant");
+
+                                        }
+                                        @foreach (Product prd in menPantList)
+                                        {
+                                            <partial name="_ProductCard" model="prd" />
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Mevcut İçerikler -->
+                        <div class="tab-pane fade" id="new-arrivals" role="tabpanel" aria-labelledby="new-arrivals-tab">
+                            <div class="row mb-4 g-3 product-append">
+                                <!-- NEW ARRIVALS ürünleri burada oluşturulacak -->
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="recommended" role="tabpanel" aria-labelledby="recommended-tab">
+                            <div class="row mb-4 g-3 product-append">
+                                <!-- RECOMMENDED ürünleri burada oluşturulacak -->
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="best-sellers" role="tabpanel" aria-labelledby="best-sellers-tab">
+                            <div class="row mb-4 g-3 product-append">
+                                <!-- BEST SELLERS ürünleri burada oluşturulacak -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section style="background-color:#f5f5f5;padding-top: 3.5rem;
+    padding-bottom: 7.5rem;">
+    <div class="container">
+        <div class="d-flex flex-column">
+            <div class="blog-section-title text-center pb-5">
+                <h3>Our Blogs</h3>
+            </div>
+            <div class="row blog-box">
+                <div class="col-lg-4 p-4">
+                    <div class="blog-item d-flex flex-column">
+                        <div class="blog-img">
+                            <img class="w-100" src="~/images/blog-01.jpg" />
+                        </div>
+                        <div class="blog-context d-flex flex-column">
+                            <h5 class="blog-author-date">
+                                By Nancy Ward
+                                on July 22, 2017
+                            </h5>
+                            <h4 class="blog-title"><a href="#" class="blog-title-link">8 Inspiring Ways to Wear Dresses in the Winter</a></h4>
+                            <p class="blog-desc">Duis ut velit gravida nibh bibendum commodo. Suspendisse pellentesque mattis augue id euismod. Interdum et male-suada fames</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 p-4">
+                    <div class="blog-item d-flex flex-column">
+                        <div class="blog-img">
+                            <img class="w-100" src="~/images/blog-02.jpg" />
+                        </div>
+                        <div class="blog-context d-flex flex-column">
+                            <h5 class="blog-author-date">
+                                By Nancy Ward
+                                on July 22, 2017
+                            </h5>
+                            <h4 class="blog-title"><a href="#" class="blog-title-link">The Great Big List of Men’s Gifts for the Holidays</a></h4>
+                            <p class="blog-desc">Nullam scelerisque, lacus sed consequat laoreet, dui enim iaculis leo, eu viverra ex nulla in tellus. Nullam nec ornare tellus, ac fringilla lacus. Ut sit ame</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 p-4">
+                    <div class="blog-item d-flex flex-column">
+                        <div class="blog-img">
+                            <img class="w-100" src="~/images/blog-03.jpg" />
+                        </div>
+                        <div class="blog-context d-flex flex-column">
+                            <h5 class="blog-author-date">
+                                By Nancy Ward
+                                on July 22, 2017
+                            </h5>
+                            <h4 class="blog-title"><a href="#" class="blog-title-link">5 Winter-to-Spring Fashion Trends to Try Now</a></h4>
+                            <p class="blog-desc">Proin nec vehicula lorem, a efficitur ex. Nam vehicula nulla vel erat tincidunt, sed hendrerit ligula porttitor. Fusce sit amet maximus nunc</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('.thumb img').on('click', function () {
+                var newImage = $(this).data('image');
+                $('#mainImage').attr('src', newImage);
+            });
+
+            $('.btn-num-product-down').on('click', function () {
+                var numProduct = Number($(this).next().val());
+                if (numProduct > 1) $(this).next().val(numProduct - 1);
+            });
+
+            $('.btn-num-product-up').on('click', function () {
+                var numProduct = Number($(this).prev().val());
+                $(this).prev().val(numProduct + 1);
+            });
+        });
+    </script>
+}

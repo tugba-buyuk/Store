@@ -1,0 +1,168 @@
+﻿@model Product
+
+@* <div class="col-sm-12 col-md-4 my-2">
+    <div class="card" style="width: 18rem;">
+        <div class="card-header text-center">
+            @Model.ProductName
+        </div>
+
+        <img src="@Model?.ImageUrl" class="card-img-top" alt="...">
+
+        <div class="card-body">
+            <div class="card-text">
+                <div class="text-danger text-center lead p-2 rounded-2">
+                    @Model?.Price.ToString("C2")
+                </div>
+            </div>
+
+            <p class="card-text">@Model?.Summary</p>
+            <div class="d-flex justify-content-center">
+                <div class="btn btn-group">
+                    <a asp-controller="Product" asp-action="Get" asp-route-id="@Model.Id"
+                       class="btn btn-outline-secondary rounded-2">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <form id="@Model.Id" asp-page="/cart" method="post">
+                        <input type="hidden" asp-for="Id" name="productId" />
+                        <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+                        <button type="submit" class="btn btn-outline-secondary mx-1">
+                            <i class="fa fa-cart-plus"></i>
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div> *@
+<div class="col-lg-3">
+    <div class="product-card flex-md-column text-center">
+        <div class="product-img">
+            @* <img src="@Model.ImageUrl" alt="@Model.ProductName" /> *@
+        </div>
+        <div class="product-info">
+            <h4>@Model.ProductName</h4>
+            <p>@Model.Price</p>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#quickViewModal" class="quick-view-btn btn btn-lg">Quick View</a>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content row">
+            <div class="row" style="padding-top:5%; padding-bottom:5%; padding-right:3%;padding-left:3%;">
+                <div class="col-md-6 col-lg-7">
+                    <div class="product-images">
+                        <div class="d-flex flex-column w-25 mb-3">
+                            <div class="thumb">
+                                @* <img src="@Model.ImageUrl" alt="IMG-PRODUCT" data-image="@Model.ImageUrl"> *@
+                            </div>
+                            <div class="thumb">
+                                @* <img src="@Model.ImageUrl" alt="IMG-PRODUCT" data-image="@Model.ImageUrl"> *@
+                            </div>
+                            <div class="thumb">
+                                @* <img src="@Model.ImageUrl" alt="IMG-PRODUCT" data-image="@Model.ImageUrl"> *@
+                            </div>
+                        </div>
+                        <div class="main-image">
+                            @* <img src="@Model.ImageUrl" alt="IMG-PRODUCT" id="mainImage"> *@
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-5">
+                    <div class="product-info">
+                        <h4 class="mtext-105 cl2 js-name-detail p-b-14">
+                            @Model.ProductName
+                        </h4>
+                        <span class="mtext-106 cl2">
+                            @Model.Price
+                        </span>
+                        <p class="stext-102 cl3 p-t-23">
+                            @Model.Summary
+                        </p>
+                        <div class="p-t-33">
+                            <div class="flex-w flex-r-m p-b-10">
+                                <div class="size-203 flex-c-m respon6">
+                                    Size
+                                </div>
+                                <div class="size-204 respon6-next">
+
+                                    <select class="form-control" id="sizeSelect">
+                                        @foreach (var size in Model.Sizes)
+                                        {
+                                            <option value=@size>@size</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="flex-w flex-r-m p-b-10">
+                                <div class="size-203 flex-c-m respon6">
+                                    Color
+                                </div>
+                                <div class="size-204 respon6-next">
+                                    <select class="form-control" id="colorSelect">
+                                        @foreach(var color in Model.ColorNames)
+                                        {
+                                            <option valur=@color>@color</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="flex-w flex-r-m p-b-10">
+                                <div class="size-204 flex-w flex-m respon6-next">
+                                    <div class="wrap-num-product flex-w m-r-20 m-tb-10">
+                                        <div class="btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m">
+                                            <i class="fas fa-minus"></i>
+                                        </div>
+                                        <input class="mtext-104 cl3 txt-center num-product" type="number" name="num-product" value="1">
+                                        <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+                                            <i class="fas fa-plus"></i>
+                                        </div>
+                                    </div>
+                                    <button class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+                                        Add to cart
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-w flex-m p-l-100 p-t-40 respon7">
+                            <div class="flex-m bor9 p-r-10 m-r-11">
+                                <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100" data-tooltip="Add to Wishlist">
+                                    <i class="fas fa-heart"></i>
+                                </a>
+                            </div>
+                            <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Facebook">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100" data-tooltip="Google Plus">
+                                <i class="fab fa-google-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            @* <div class="modal-header">
+            <h5 class="modal-title" id="quickViewModalLabel">Pink T-Shirt</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <img src="~/images/pink-tshirt.png" alt="Pink T-Shirt" class="img-fluid" />
+            <p>150 TL</p>
+            <p>Ürün hakkında detaylı bilgi burada yer alabilir...</p>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+            <button type="button" class="btn btn-primary">Sepete Ekle</button>
+            </div> *@
+        </div>
+    </div>
+</div>
