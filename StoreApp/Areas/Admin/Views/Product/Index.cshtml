@@ -24,7 +24,7 @@
             <thead>
                 <tr>
                     <th>Id</th>
-                    <th>Images</th>
+                    <th>Image</th>
                     <th>Product Name</th>
                     <th>Showcase</th>
                     <th>Price</th>
@@ -40,7 +40,15 @@
                     <tr>
                         <td>@prd.Id</td>
                         <td>
-                            @* <img class="border border-light rounded" src="@prd?.ImageUrl" alt="@prd?.ProductName" width="50" /> *@
+                            @if (prd.ImageUrls != null && prd.ImageUrls.Any())
+                            {
+                                <img class="border border-light rounded" width="50" src="@prd.MainImageUrl" />
+                            }
+                            else
+                            {
+                                <p>Resim yok</p>
+                            }
+                            @* <img class="border border-light rounded" src="@prd?.ımageurl" alt="@prd?.productname" width="50" /> *@
                         </td>
                         <td>@prd.ProductName</td>
                         <td>

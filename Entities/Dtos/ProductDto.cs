@@ -20,6 +20,7 @@ namespace Entities.Dtos
         public int? CategoryId { get; init; }      // Foreign key
         public string? Summary { get; init; } = string.Empty;
         public bool ShowCase { get; set; }
+        public String? MainImageUrl { get; set; }
         public List<string> Sizes { get; set; } = new List<string>();
         public List<string> ColorNames { get; set; } = new List<string>();
         public string? Gender { get; set; } = string.Empty;

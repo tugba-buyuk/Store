@@ -215,6 +215,7 @@ namespace StoreApp.Migrations
                     CategoryId = table.Column<int>(type: "INTEGER", nullable: true),
                     Summary = table.Column<string>(type: "TEXT", nullable: true),
                     ShowCase = table.Column<bool>(type: "INTEGER", nullable: false),
+                    MainImageUrl = table.Column<string>(type: "TEXT", nullable: true),
                     Sizes = table.Column<string>(type: "TEXT", nullable: false),
                     ColorNames = table.Column<string>(type: "TEXT", nullable: false),
                     Gender = table.Column<string>(type: "TEXT", nullable: true),
@@ -281,9 +282,9 @@ namespace StoreApp.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "3408646f-0790-466f-95a3-f42dc05b2459", null, "User", "USER" },
-                    { "6aebe852-b5eb-42c1-b55d-4c5dd71733b2", null, "Admin", "ADMIN" },
-                    { "e2042051-ee53-41ba-9c32-482d031bda7e", null, "Editor", "EDITOR" }
+                    { "268fdfea-9747-4a0f-a636-77e09912f482", null, "Admin", "ADMIN" },
+                    { "2a3bb9e9-90b2-4cc7-843f-f1a96faeef14", null, "User", "USER" },
+                    { "9b18d90c-629c-4961-b968-467ee1533270", null, "Editor", "EDITOR" }
                 });
 
             migrationBuilder.InsertData(
@@ -324,17 +325,17 @@ namespace StoreApp.Migrations
 
             migrationBuilder.InsertData(
                 table: "Products",
-                columns: new[] { "Id", "CategoryId", "ColorNames", "Gender", "ImageUrls", "Price", "ProductName", "ShowCase", "Sizes", "Summary" },
+                columns: new[] { "Id", "CategoryId", "ColorNames", "Gender", "ImageUrls", "MainImageUrl", "Price", "ProductName", "ShowCase", "Sizes", "Summary" },
                 values: new object[,]
                 {
-                    { 1, 2, "[]", "", "[]", 15000m, "Phone", false, "[]", "" },
-                    { 2, 2, "[]", "", "[]", 25000m, "Notebook", false, "[]", "" },
-                    { 3, 2, "[]", "", "[]", 1500m, "Keyboard", false, "[]", "" },
-                    { 4, 2, "[]", "", "[]", 5000m, "Monitor", false, "[]", "" },
-                    { 5, 2, "[]", "", "[]", 5000m, "Mouse", false, "[]", "" },
-                    { 6, 1, "[]", "", "[]", 50m, "Savaş Sanatı", true, "[]", "" },
-                    { 7, 1, "[]", "", "[]", 60m, "Yüzbaşının Kızı", true, "[]", "" },
-                    { 8, 1, "[]", "", "[]", 500m, "İtiraflar", true, "[]", "" }
+                    { 1, 2, "[]", "", "[]", null, 15000m, "Phone", false, "[]", "" },
+                    { 2, 2, "[]", "", "[]", null, 25000m, "Notebook", false, "[]", "" },
+                    { 3, 2, "[]", "", "[]", null, 1500m, "Keyboard", false, "[]", "" },
+                    { 4, 2, "[]", "", "[]", null, 5000m, "Monitor", false, "[]", "" },
+                    { 5, 2, "[]", "", "[]", null, 5000m, "Mouse", false, "[]", "" },
+                    { 6, 1, "[]", "", "[]", null, 50m, "Savaş Sanatı", true, "[]", "" },
+                    { 7, 1, "[]", "", "[]", null, 60m, "Yüzbaşının Kızı", true, "[]", "" },
+                    { 8, 1, "[]", "", "[]", null, 500m, "İtiraflar", true, "[]", "" }
                 });
 
             migrationBuilder.CreateIndex(

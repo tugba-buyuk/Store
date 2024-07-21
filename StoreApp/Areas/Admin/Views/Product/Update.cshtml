@@ -67,14 +67,18 @@
     <div class="form-group my-3">
         <label>Existing Images</label>
         <div class="existing-images">
-            @if (Model.Images.Count > 0)
+            @if (Model.ImageUrls.Count > 0)
             {
-                foreach (var image in Model.Images)
-                {
-                    <div class="image-thumbnail">
-                        <img src="@image.Url" alt="Image" style="max-width: 100px; max-height: 100px;" />
+                <div class="row">
+                    @foreach (var image in Model.ImageUrls)
+                    {
+
+                    <div class="image-thumbnail col-1">
+                        <img src="@image" alt="Image" style="max-width: 100px; max-height: 100px;" />
                     </div>
-                }
+
+                    }
+                </div>
             }
             else
             {
@@ -84,7 +88,7 @@
     </div>
 
     <div class="form-group my-3">
-        <label for="Files">Add New Images</label>
+        <label for="Files">New Images</label>
         <input name="Files" type="file" class="form-control" multiple />
     </div>
 

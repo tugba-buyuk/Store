@@ -11,7 +11,7 @@ using Repositories;
 namespace StoreApp.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20240720222946_firstINIT")]
+    [Migration("20240721163353_firstINIT")]
     partial class firstINIT
     {
         /// <inheritdoc />
@@ -265,6 +265,9 @@ namespace StoreApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("MainImageUrl")
+                        .HasColumnType("TEXT");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
@@ -423,19 +426,19 @@ namespace StoreApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3408646f-0790-466f-95a3-f42dc05b2459",
+                            Id = "2a3bb9e9-90b2-4cc7-843f-f1a96faeef14",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "6aebe852-b5eb-42c1-b55d-4c5dd71733b2",
+                            Id = "268fdfea-9747-4a0f-a636-77e09912f482",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "e2042051-ee53-41ba-9c32-482d031bda7e",
+                            Id = "9b18d90c-629c-4961-b968-467ee1533270",
                             Name = "Editor",
                             NormalizedName = "EDITOR"
                         });

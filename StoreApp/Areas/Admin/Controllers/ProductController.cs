@@ -61,10 +61,21 @@ namespace StoreApp.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromForm] ProductDtoForInsertion productDto, List<IFormFile> files)
+        public async Task<IActionResult> Create([FromForm] ProductDtoForInsertion productDto, List<IFormFile> files, IFormFile mainfile)
         {
             if (ModelState.IsValid)
             {
+                if (mainfile is not null)
+                {
+                    string path = Path.Combine(Directory.GetCurrentDirectory(),
+                    "wwwroot", "images", mainfile.FileName);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await mainfile.CopyToAsync(stream);
+                    }
+                    productDto.MainImageUrl = String.Concat("/images/", mainfile.FileName);
+                }
                 var imageUrls = new List<string>();
                 foreach (var file in files)
                 {
@@ -78,6 +89,8 @@ namespace StoreApp.Areas.Admin.Controllers
                         imageUrls.Add(String.Concat("/images/", file.FileName));
                     }
                 }
+                imageUrls.Add(productDto.MainImageUrl);
+                
 
                 // Update the DTO to include image URLs
                 productDto.Images = imageUrls.Select(url => new PrdImage { Url = url }).ToList();
@@ -102,11 +115,11 @@ namespace StoreApp.Areas.Admin.Controllers
         public async Task<IActionResult> Update([FromForm] ProductDtoForUpdate productDto, List<IFormFile> files, [FromRoute(Name = "id")] int id)
         {
             var model = _manager.ProductService.GetOneProduct(id, false);
-            if (productDto.Images.Count > 0 && files.Count > 0 )
+            if (productDto.Files.Count > 0 && files.Count > 0 )
             {
+                var imageUrls = new List<string>();
                 if (ModelState.IsValid)
                 {
-                    var imageUrls = new List<string>();
                     foreach (var file in files)
                     {
                         if (file != null && file.Length > 0)
@@ -119,8 +132,11 @@ namespace StoreApp.Areas.Admin.Controllers
                             imageUrls.Add(String.Concat("/images/", file.FileName));
                         }
                     }
-                    
+                   
                 }
+                productDto.Images = imageUrls.Select(url => new PrdImage { Url = url }).ToList();
+                productDto.ImageUrls = imageUrls;
+
                 _manager.ProductService.UpdateOneProduct(productDto);
                 return RedirectToAction("Index");
 
@@ -128,6 +144,7 @@ namespace StoreApp.Areas.Admin.Controllers
             else
             {
                 productDto.Images = model.Images;
+                productDto.ImageUrls = model.ImageUrls;
                 _manager.ProductService.UpdateOneProduct(productDto);
                 return RedirectToAction("Index");
             }

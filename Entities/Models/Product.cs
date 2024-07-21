@@ -13,6 +13,7 @@ public class Product
     public Category? Category { get; set; }   //Navigation property
     public String? Summary { get; set; }=String.Empty;
     public bool ShowCase {  get; set; }
+    public String? MainImageUrl { get; set; }
     public List<string> Sizes { get; set; } = new List<string>();
     public List<string> ColorNames { get; set; } = new List<string>();
     public string? Gender { get; set; } = string.Empty;
