@@ -15,15 +15,17 @@ namespace Repositories
         private readonly ICategoryRepository _categoryRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IColorRepository _colorRepository;
+        private readonly ICouponCodeRepository _couponCodeRepository;
 
 
-        public RepositoryManager(IProductRepository productRepository, RepositoryContext context, ICategoryRepository categoryRepository,IOrderRepository orderRepository, IColorRepository colorRepository)
+        public RepositoryManager(IProductRepository productRepository, RepositoryContext context, ICategoryRepository categoryRepository,IOrderRepository orderRepository, IColorRepository colorRepository, ICouponCodeRepository couponCodeRepository)
         {
             _productRepository = productRepository;
             _context = context;
             _categoryRepository = categoryRepository;
             _orderRepository = orderRepository;
             _colorRepository = colorRepository;
+            _couponCodeRepository = couponCodeRepository;
         }
 
         public IProductRepository Product => _productRepository;
@@ -32,6 +34,7 @@ namespace Repositories
 
         public IOrderRepository Order => _orderRepository;
         public IColorRepository Color => _colorRepository;
+        public ICouponCodeRepository CouponCode => _couponCodeRepository;
 
 
         public void Save()

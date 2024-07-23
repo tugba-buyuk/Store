@@ -13,6 +13,7 @@ namespace Services.Contracts
         IOrderService OrderService { get; }
         IAuthService AuthService { get; }
         IColorService ColorService { get; }
+        ICouponCodeService CouponCodeService { get; }
         
     }
 }

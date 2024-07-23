@@ -29,13 +29,13 @@ namespace StoreApp.Pages
 
 
         [ValidateAntiForgeryToken]
-        public IActionResult OnPost(int productId, string returnUrl)
+        public IActionResult OnPost(int productId, string returnUrl,string productSize, string productColor,int productQuantity)
         {
             Product? product = _manager.ProductService.GetOneProduct(productId, false);
             if (product is not null)
             {
                 //Cart = HttpContext.Session.GetJson<Cart>("cart") ?? new Cart();
-                Cart.AddItem(product, 1);
+                Cart.AddItem(product, productQuantity,productColor,productSize);
                 //HttpContext.Session.SetJson<Cart>("cart",Cart);
             }
             return RedirectToPage(new {returnUrl=returnUrl});

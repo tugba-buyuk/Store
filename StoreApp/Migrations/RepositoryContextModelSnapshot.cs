@@ -23,6 +23,10 @@ namespace StoreApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int?>("OrderId")
                         .HasColumnType("INTEGER");
 
@@ -31,6 +35,10 @@ namespace StoreApp.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Size")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("CartLineId");
 
@@ -183,6 +191,27 @@ namespace StoreApp.Migrations
                             ColorId = 20,
                             ColorName = "Teal"
                         });
+                });
+
+            modelBuilder.Entity("Entities.Models.CouponCode", b =>
+                {
+                    b.Property<int>("CouponCodeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CouponCodeDiscount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CouponCodeName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("CouponCodeId");
+
+                    b.ToTable("CouponCodes");
                 });
 
             modelBuilder.Entity("Entities.Models.Order", b =>
@@ -423,19 +452,19 @@ namespace StoreApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "2a3bb9e9-90b2-4cc7-843f-f1a96faeef14",
+                            Id = "4dcf2daf-42e6-4b07-b38a-7456b7caf8ad",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "268fdfea-9747-4a0f-a636-77e09912f482",
+                            Id = "7d861487-710a-4aaa-982b-311f99b2a416",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "9b18d90c-629c-4961-b968-467ee1533270",
+                            Id = "4d068571-3f0b-434d-aebe-93c35d14df21",
                             Name = "Editor",
                             NormalizedName = "EDITOR"
                         });

@@ -28,10 +28,10 @@ namespace StoreApp.Models
             return cart;
         }
 
-        public override void AddItem(Product product, int quantity)
+        public override void AddItem(Product product, int quantity,string color,string size)
         {
             // Cart sınıfının AddItem metodunu çağırır.
-            base.AddItem(product, quantity);
+            base.AddItem(product, quantity,color,size);
 
             // Güncellenmiş cart nesnesini oturumda "cart" anahtarıyla saklar.
             Session?.SetJson<SessionCart>("cart", this);

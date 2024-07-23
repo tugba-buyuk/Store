@@ -14,7 +14,7 @@ namespace Entities.Models
         {
             Lines = new List<CartLine>();
         }
-        public virtual void AddItem(Product product,int quantity)
+        public virtual void AddItem(Product product,int quantity, string color, string size)
         {
             CartLine? line=Lines.Where(l=>l.Product.Id==product.Id).FirstOrDefault();
 
@@ -23,7 +23,9 @@ namespace Entities.Models
                 Lines.Add(new CartLine
                 {
                     Product = product,
-                    Quantity = quantity
+                    Quantity = quantity,
+                    Color= color,
+                    Size = size
                 });
 
             }

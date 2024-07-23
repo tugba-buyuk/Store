@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StoreApp.Migrations
 {
     /// <inheritdoc />
-    public partial class firstINIT : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -76,6 +76,21 @@ namespace StoreApp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Colors", x => x.ColorId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CouponCodes",
+                columns: table => new
+                {
+                    CouponCodeId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CouponCodeName = table.Column<string>(type: "TEXT", nullable: false),
+                    CouponCodeDiscount = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CouponCodes", x => x.CouponCodeId);
                 });
 
             migrationBuilder.CreateTable(
@@ -239,6 +254,8 @@ namespace StoreApp.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ProductId = table.Column<int>(type: "INTEGER", nullable: false),
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false),
+                    Size = table.Column<string>(type: "TEXT", nullable: false),
+                    Color = table.Column<string>(type: "TEXT", nullable: false),
                     OrderId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
@@ -282,9 +299,9 @@ namespace StoreApp.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "268fdfea-9747-4a0f-a636-77e09912f482", null, "Admin", "ADMIN" },
-                    { "2a3bb9e9-90b2-4cc7-843f-f1a96faeef14", null, "User", "USER" },
-                    { "9b18d90c-629c-4961-b968-467ee1533270", null, "Editor", "EDITOR" }
+                    { "4d068571-3f0b-434d-aebe-93c35d14df21", null, "Editor", "EDITOR" },
+                    { "4dcf2daf-42e6-4b07-b38a-7456b7caf8ad", null, "User", "USER" },
+                    { "7d861487-710a-4aaa-982b-311f99b2a416", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
@@ -419,6 +436,9 @@ namespace StoreApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "Colors");
+
+            migrationBuilder.DropTable(
+                name: "CouponCodes");
 
             migrationBuilder.DropTable(
                 name: "PrdImage");

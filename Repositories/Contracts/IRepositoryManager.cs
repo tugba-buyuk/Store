@@ -12,6 +12,7 @@ namespace Repositories.Contracts
         ICategoryRepository Category {  get; }
         IOrderRepository Order {  get; }
         IColorRepository Color { get; }
+        ICouponCodeRepository CouponCode { get; }
         void Save();
     }
 }

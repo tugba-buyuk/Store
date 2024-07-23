@@ -11,6 +11,8 @@ namespace Entities.Models
         public int CartLineId {  get; set; }
         public Product Product { get; set; } = new();
         public int Quantity {  get; set; }
+        public string Size {  get; set; }
+        public string Color {  get; set; }
 
 
     }
