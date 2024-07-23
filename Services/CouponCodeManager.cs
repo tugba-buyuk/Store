@@ -23,7 +23,12 @@ namespace Services
             _mapper = mapper;
         }
 
-        
+        public void ChangeActivityCouponCode(int id)
+        {
+            _manager.CouponCode.ChangeActivity(id);
+            var couponCode = _manager.CouponCode.GetOneCouponCode(id, false);
+        }
+
         public void CreateCouponCode(CouponCodeDtoForCreate couponCodeDto)
         {
             CouponCode couponCode= _mapper.Map<CouponCode>(couponCodeDto);
@@ -45,6 +50,11 @@ namespace Services
         public IEnumerable<CouponCode> GetAllCouponCodes(bool trackChanges)
         {
             return _manager.CouponCode.FindAll(trackChanges);
+        }
+
+        public CouponCode? GetCouponCodeByName(string couponCode, bool trackChanges)
+        {
+            return _manager.CouponCode.FindByCouponName(couponCode, trackChanges);
         }
 
         public CouponCode? GetOneCouponCode(int id, bool trackChanges)

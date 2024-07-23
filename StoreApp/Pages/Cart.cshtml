@@ -44,11 +44,20 @@
                         }
                     </tbody>
                 </table>
-                <div class="coupon-area">
+                <div class="coupon-area d-flex">
                     <form action="/Cart?handler=ApplyCoupon" method="post">
-                        <input type="text" name="couponCode" placeholder="Coupon Code" />
-                        <button type="submit">APPLY COUPON</button>
+                        <div class="apply-coupon d-flex">
+                            <input type="text" name="couponCode" placeholder="Coupon Code" />
+                            @{
+                                var total = Model.Cart.ComputeTotalValue();
+                            }
+                            <input type="hidden" name="cartTotal"  value="@total"/>
+                            <button type="submit">APPLY COUPON</button>
+                        </div>
                     </form>
+                    <div class="coupon-message">
+                        <span>@TempData["CouponMessage"]</span>
+                    </div>
                 </div>
             </div>
         </div>

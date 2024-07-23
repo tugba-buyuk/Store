@@ -54,5 +54,21 @@ namespace StoreApp.Pages
             }
             return Page();
         }
+
+        [ValidateAntiForgeryToken]
+        public IActionResult OnPostApplyCoupon(decimal cartTotal,string couponCode)
+        {
+            var coupon = _manager.CouponCodeService.GetCouponCodeByName(couponCode, false);
+            if(coupon is null || coupon.IsActive == false)
+            {
+                TempData["CouponMessage"] = "Invalid coupon code.";
+            }
+            else
+            {
+                var newCartTotal=cartTotal - (cartTotal*coupon.CouponCodeDiscount);
+                
+            }
+            return Page();
+        }
     }
 }

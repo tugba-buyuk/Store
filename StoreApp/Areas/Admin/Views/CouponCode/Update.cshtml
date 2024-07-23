@@ -5,9 +5,9 @@
 </div>
 
 
-<form method="post" asp-action="Create">
+<form method="post" asp-action="Update">
     <div class="text-danger" asp-validation-summary="All"></div>
-
+    <input type="hidden" asp-for="CouponCodeId" />
     <div class="form-group my-3">
         <label asp-for="CouponCodeName"></label>
         <input class="form-control" asp-for="CouponCodeName" />

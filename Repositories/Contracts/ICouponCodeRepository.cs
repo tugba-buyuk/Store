@@ -12,7 +12,9 @@ namespace Repositories.Contracts
         void CreateOneCouponCode(CouponCode couponCode);
         void UpdateOneCouponCode(CouponCode couponCode);
         void DeleteOneCoupon(CouponCode couponCode);
-        void ActivateCouponCode(CouponCode couponCode);
+        void ChangeActivity(int id);
+        public CouponCode? FindByCouponName(string couponCode, bool trackChanges);
         public CouponCode? GetOneCouponCode(int id, bool trackChanges);
+
     }
 }

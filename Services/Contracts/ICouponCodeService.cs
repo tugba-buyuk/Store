@@ -12,9 +12,11 @@ namespace Services.Contracts
     {
         IEnumerable<CouponCode> GetAllCouponCodes(bool trackChanges);
         CouponCode? GetOneCouponCode(int id, bool trackChanges);
+        CouponCode? GetCouponCodeByName(string couponCode,bool trackChanges);
         void CreateCouponCode(CouponCodeDtoForCreate couponCodeDto);
         CouponCodeDtoForUpdate GetOneCouponCodeForUpdate(int id, bool trackChanges);
         void UpdateOneCouponCode(CouponCodeDtoForUpdate couponCodeDto);
         void DeleteOneCouponCode(int id);
+        void ChangeActivityCouponCode(int id);
     }
 }

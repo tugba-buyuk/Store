@@ -41,7 +41,7 @@ namespace StoreApp.Areas.Admin.Controllers
 
         public IActionResult Update([FromRoute(Name="id")] int id)
         {
-            var couponCode = _manager.CouponCodeService.GetOneCouponCode(id, false);
+            var couponCode = _manager.CouponCodeService.GetOneCouponCodeForUpdate(id, false);
             return View(couponCode);
         }
 
@@ -56,6 +56,17 @@ namespace StoreApp.Areas.Admin.Controllers
                 RedirectToAction("Index");
             }
             return View();
+        }
+
+        public IActionResult Delete([FromRoute(Name ="id")] int id)
+        {
+            _manager.CouponCodeService.DeleteOneCouponCode(id);
+            return RedirectToAction("Index");
+        }
+        public IActionResult Activate([FromRoute(Name ="id")] int id)
+        {
+            _manager.CouponCodeService.ChangeActivityCouponCode(id);
+            return RedirectToAction("Index");
         }
 
 

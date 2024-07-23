@@ -304,3 +304,46 @@ footer {
     .quick-view-btn:hover {
         box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
     }
+.coupon-area {
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    flex-direction: row;
+    justify-content:space-between;
+    align-items:center;
+}
+
+    .apply-coupon input {
+        width: 220px;
+        height: 45px;
+        border: 1px solid #e6e6e6;
+        border-radius: 22px;
+        font-size: 14px;
+        line-height: 1.466667;
+        color: #333;
+        margin-right: 10px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        padding-left: 20px;
+    }
+    .apply-coupon button  {
+        display:flex;
+        border: 1px solid #e6e6e6;
+        border-radius: 22px;
+        background-color: #f3f3f3;
+        min-width: 163px;
+        height: 45px;
+        font-size: 15px;
+        line-height: 1.466667;
+        text-transform: uppercase;
+        color: #333;
+        justify-content:center;
+        align-items:center;
+        cursor:pointer;
+        margin-bottom:5px;
+        margin-top:5px;
+        padding-right:15px;
+        padding-left:15px;
+        font-weight:500;
+    }
