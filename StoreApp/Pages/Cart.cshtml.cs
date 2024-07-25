@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Services.Contracts;
 using StoreApp.Infrastructure.Extensions;
+using StoreApp.Models;
 
 namespace StoreApp.Pages
 {
@@ -59,15 +60,25 @@ namespace StoreApp.Pages
         public IActionResult OnPostApplyCoupon(decimal cartTotal,string couponCode)
         {
             var coupon = _manager.CouponCodeService.GetCouponCodeByName(couponCode, false);
-            if(coupon is null || coupon.IsActive == false)
+            var cart = SessionCart.GetCart(HttpContext.RequestServices);
+            if (coupon is null || coupon.IsActive == false)
             {
                 TempData["CouponMessage"] = "Invalid coupon code.";
             }
             else
             {
-                var newCartTotal=cartTotal - (cartTotal*coupon.CouponCodeDiscount);
+                decimal discountAmountDecimal = (cartTotal * coupon.CouponCodeDiscount)/100;
+                int discountAmount = (int)Math.Round(discountAmountDecimal);
+
+                cart.ApplyDiscount(discountAmount);
+                var newTotal =cart.ComputeTotalValue();
+                cart.DiscountedTotalPrice = newTotal;
+                HttpContext.Session.SetJson<Cart>("cart", cart);
+                Cart = SessionCart.GetCart(HttpContext.RequestServices);
+                TempData["CouponMessage"] = "Coupon applied successfully.";
                 
             }
+            
             return Page();
         }
     }

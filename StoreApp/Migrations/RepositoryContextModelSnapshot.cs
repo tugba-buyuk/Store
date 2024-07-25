@@ -452,19 +452,19 @@ namespace StoreApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4dcf2daf-42e6-4b07-b38a-7456b7caf8ad",
+                            Id = "0f223c0a-87ff-4100-9ff8-33b6b337ed3a",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "7d861487-710a-4aaa-982b-311f99b2a416",
+                            Id = "6e35319f-4bd0-4881-9639-c40937e2c480",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "4d068571-3f0b-434d-aebe-93c35d14df21",
+                            Id = "c1928881-0877-4c52-9840-e340af92d240",
                             Name = "Editor",
                             NormalizedName = "EDITOR"
                         });

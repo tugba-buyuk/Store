@@ -39,17 +39,6 @@ namespace Repositories
 
         public CouponCode? GetOneCouponCode(int id, bool trackChanges)
         {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateOneCouponCode(CouponCode couponCode)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-        public CouponCode? GetOneCouponCode(int id, bool trackChanges)
-        {
             return FindByCondition(p => p.CouponCodeId.Equals(id), trackChanges);
         }
 

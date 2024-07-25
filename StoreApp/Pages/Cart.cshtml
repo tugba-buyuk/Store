@@ -5,7 +5,7 @@
 }
 <div class="container" style="padding-top:150px;padding-bottom:150px;">
     <div class="row w-100 justify-content-between">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="shopping-cart" style="border:1px solid #e6e6e6;">
                 <table style="margin-bottom:0;">
                     <thead>
@@ -20,7 +20,7 @@
                         @foreach (var line in Model.Cart?.Lines ?? Enumerable.Empty<CartLine>())
                         {
                             <tr>
-                                <td class=" d-flex align-items-center gap-2">
+                                <td class="d-flex align-items-center gap-2">
                                     <div class="prd-img">
                                         <img src="@line.Product.MainImageUrl" width="100px" />
                                     </div>
@@ -28,7 +28,32 @@
                                 </td>
                                 <td>@line.Product.Price.ToString("c")</td>
                                 <td>@line.Quantity</td>
-                                <td>@((line.Product.Price * line.Quantity).ToString("c2"))</td>
+                                <td>
+                                    @{
+                                        var itemTotal = line.Product.Price * line.Quantity;
+                                        decimal discountedTotal;
+                                        if(Model.Cart.Discount == 0)
+                                        {
+                                            discountedTotal = 0;
+                                        }
+                                        else
+                                        {
+                                            discountedTotal = Model.Cart.DiscountedTotalPrice;
+                                        }
+                                        
+                                        if (discountedTotal != 0 && discountedTotal != null)
+                                        {
+                                            <span style="text-decoration: line-through;">@itemTotal.ToString("c2")</span>
+
+                                            <br />
+                                            @discountedTotal.ToString("c2")
+                                        }
+                                        else
+                                        {
+                                            @itemTotal.ToString("c2")
+                                        }
+                                    }
+                                </td>
                                 <td>
                                     <form action="/Cart?handler=Remove" method="post">
                                         <input type="hidden" name="id" value="@line.Product.Id" />
@@ -45,19 +70,23 @@
                     </tbody>
                 </table>
                 <div class="coupon-area d-flex">
-                    <form action="/Cart?handler=ApplyCoupon" method="post">
+                    <form method="post">
                         <div class="apply-coupon d-flex">
                             <input type="text" name="couponCode" placeholder="Coupon Code" />
                             @{
                                 var total = Model.Cart.ComputeTotalValue();
                             }
-                            <input type="hidden" name="cartTotal"  value="@total"/>
-                            <button type="submit">APPLY COUPON</button>
+                            <input type="hidden" name="cartTotal" value="@total" />
+                            <button type="submit" asp-page-handler="ApplyCoupon">APPLY COUPON</button>
+                            @Html.AntiForgeryToken()
+                        </div>
+                        <div class="coupon-message">
+                            <span>@TempData["CouponMessage"]</span>
                         </div>
                     </form>
-                    <div class="coupon-message">
-                        <span>@TempData["CouponMessage"]</span>
-                    </div>
+                    <a asp-action="Index" asp-controller="Checkout">
+                        Proceed to Checkout
+                    </a>
                 </div>
             </div>
         </div>
