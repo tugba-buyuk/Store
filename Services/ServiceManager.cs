@@ -15,8 +15,12 @@ namespace Services
         private readonly IAuthService _authService;
         private readonly IColorService _colorService;
         private readonly ICouponCodeService _couponCodeService;
+        private readonly ICountryService _countryService;
+        private readonly ICityService _cityService;
 
-        public ServiceManager(IProductService productService, ICategoryService categoryService, IOrderService orderService,IAuthService authService, IColorService colorService, ICouponCodeService couponCodeService)
+        public ServiceManager(IProductService productService, ICategoryService categoryService, IOrderService orderService,
+            IAuthService authService, IColorService colorService, ICouponCodeService couponCodeService, ICountryService countryService,
+            ICityService cityService)
         {
             _productService = productService;
             _categoryService = categoryService;
@@ -24,6 +28,8 @@ namespace Services
             _authService = authService;
             _colorService = colorService;
             _couponCodeService = couponCodeService;
+            _countryService = countryService;
+            _cityService = cityService;
         }
 
         public IProductService ProductService => _productService;
@@ -35,6 +41,8 @@ namespace Services
         public IAuthService AuthService => _authService;
         public IColorService ColorService => _colorService;
         public ICouponCodeService CouponCodeService => _couponCodeService;
+        public ICountryService CountryService => _countryService;
+        public ICityService CityService => _cityService;    
 
     }
 }

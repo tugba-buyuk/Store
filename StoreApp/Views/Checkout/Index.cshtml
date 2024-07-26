@@ -1,4 +1,15 @@
-﻿<<div class="container" style="padding-top:150px; padding-bottom:50px;">
+﻿@model CheckoutViewModel
+
+@{
+    var totalPrice = Model.Cart.ComputeTotalWithoutDescount();
+    var discountTotalPrice = Model.Cart.DiscountedTotalPrice;
+    var difference = totalPrice - discountTotalPrice;
+    var shipping = 10;
+    var total = shipping + discountTotalPrice;
+   
+}
+
+<div class="container" style="padding-top:150px; padding-bottom:50px;">
     <div class="row w-100 justify-content-between">
         <div class="col-md-7 p-3" style="border:2px solid #e6e6e6">
             <div class="address-area d-flex flex-column">
@@ -17,11 +28,27 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="country">Country</label>
-                            <input id="country" type="text" class="form-control" placeholder="Country*" />
+                            <select id="country" class="form-control">
+                                <option value="">Select Country*</option>
+                                <!-- Add your country options here -->
+                                @foreach(Country country in Model.Countries)
+                                {
+                                    <option value="@country.CountryName">@country.CountryName</option>
+                                }
+                                <!-- More countries -->
+                            </select>
                         </div>
                         <div class="col-md-6">
                             <label for="city">City</label>
-                            <input id="city" type="text" class="form-control" placeholder="City*" />
+                            <select id="city" class="form-control">
+                                <option value="">Select City*</option>
+                                <!-- Add your city options here -->
+                                @foreach(City city in Model.Cities)
+                                {
+                                    <option value="@city.CityName">@city.CityName</option>
+                                }
+                                <!-- More cities -->
+                            </select>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -33,7 +60,7 @@
                     <div class="row mb-3">
                         <div class="col-md-12">
                             <label for="fullAddress">Full Address</label>
-                            <input id="fullAddress" type="text" class="form-control" placeholder="Full Address*" />
+                            <textarea id="fullAddress" class="form-control" placeholder="Full Address*" rows="3"></textarea>
                         </div>
                     </div>
                 </div>
@@ -45,28 +72,29 @@
                 <p class="mb-0">This Order Ships Free!</p>
             </div>
             <div class="d-flex justify-content-between mb-3">
-                <strong><h5 class="mb-0">Item:</h5></strong>
-                <h5 class="mb-0">$120</h5>
+                <strong><h5 class="mb-0">Item (@Model.Cart.Lines.Count):</h5></strong>
+                <h5 class="mb-0">@totalPrice.ToString("c")</h5>
             </div>
             <div class="d-flex justify-content-between mb-3">
                 <strong><h5 class="mb-0">Promotional Savings:</h5></strong>
-                <h5 class="mb-0 text-danger">-$20</h5>
+                <h5 class="mb-0 text-danger">-@difference.ToString("c")</h5>
             </div>
             <div class="d-flex justify-content-between mb-3">
                 <strong><h5 class="mb-0">Subtotal After Discount:</h5></strong>
-                <h5 class="mb-0">$100</h5>
+                <h5 class="mb-0">@discountTotalPrice.ToString("c")</h5>
             </div>
             <div class="d-flex justify-content-between mb-3">
                 <strong><h5 class="mb-0">Shipping:</h5></strong>
-                <h5 class="mb-0">$10</h5>
+                <h5 class="mb-0">@shipping.ToString("c")</h5>
             </div>
             <div class="d-flex justify-content-between mb-4 border-top pt-2">
                 <strong><h3 class="mb-0">TOTAL:</h3></strong>
-                <h3 class="mb-0">$110</h3>
+                <h3 class="mb-0">@total.ToString("c")</h3>
             </div>
             <button class="btn btn-primary w-100">SUBMIT ORDER</button>
         </div>
 
-
     </div>
 </div>
+
+

@@ -8,11 +8,13 @@ namespace Repositories.Contracts
 {
     public interface IRepositoryManager
     {
-        IProductRepository Product {  get; }
-        ICategoryRepository Category {  get; }
-        IOrderRepository Order {  get; }
+        IProductRepository Product { get; }
+        ICategoryRepository Category { get; }
+        IOrderRepository Order { get; }
         IColorRepository Color { get; }
         ICouponCodeRepository CouponCode { get; }
+        ICountryRepository Country { get; }
+        ICityRepository City { get; }
         void Save();
     }
 }

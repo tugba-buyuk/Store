@@ -14,6 +14,8 @@ namespace Services.Contracts
         IAuthService AuthService { get; }
         IColorService ColorService { get; }
         ICouponCodeService CouponCodeService { get; }
+        ICountryService CountryService { get; }
+        ICityService CityService { get; }
         
     }
 }

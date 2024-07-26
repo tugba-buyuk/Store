@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StoreApp.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class firstINIT : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -66,6 +66,20 @@ namespace StoreApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "City",
+                columns: table => new
+                {
+                    CityId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CityName = table.Column<string>(type: "TEXT", nullable: false),
+                    CountryId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_City", x => x.CityId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Colors",
                 columns: table => new
                 {
@@ -76,6 +90,19 @@ namespace StoreApp.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Colors", x => x.ColorId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Country",
+                columns: table => new
+                {
+                    CountryId = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    CountryName = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Country", x => x.CountryId);
                 });
 
             migrationBuilder.CreateTable(
@@ -299,9 +326,9 @@ namespace StoreApp.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "0f223c0a-87ff-4100-9ff8-33b6b337ed3a", null, "User", "USER" },
-                    { "6e35319f-4bd0-4881-9639-c40937e2c480", null, "Admin", "ADMIN" },
-                    { "c1928881-0877-4c52-9840-e340af92d240", null, "Editor", "EDITOR" }
+                    { "15bf888d-face-4694-9357-01bd386772d5", null, "User", "USER" },
+                    { "7e659602-6180-4b23-b22f-4c9ed02c628a", null, "Editor", "EDITOR" },
+                    { "c11a5039-ed90-48e6-882f-68b67db7bb03", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
@@ -311,6 +338,94 @@ namespace StoreApp.Migrations
                 {
                     { 1, "Book" },
                     { 2, "Electronic" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "City",
+                columns: new[] { "CityId", "CityName", "CountryId" },
+                values: new object[,]
+                {
+                    { 1, "Adana", 1 },
+                    { 2, "Adıyaman", 1 },
+                    { 3, "Afyonkarahisar", 1 },
+                    { 4, "Ağrı", 1 },
+                    { 5, "Amasya", 1 },
+                    { 6, "Ankara", 1 },
+                    { 7, "Antalya", 1 },
+                    { 8, "Artvin", 1 },
+                    { 9, "Aydın", 1 },
+                    { 10, "Balıkesir", 1 },
+                    { 11, "Bilecik", 1 },
+                    { 12, "Bingöl", 1 },
+                    { 13, "Bitlis", 1 },
+                    { 14, "Bolu", 1 },
+                    { 15, "Burdur", 1 },
+                    { 16, "Bursa", 1 },
+                    { 17, "Çanakkale", 1 },
+                    { 18, "Çankırı", 1 },
+                    { 19, "Çorum", 1 },
+                    { 20, "Denizli", 1 },
+                    { 21, "Diyarbakır", 1 },
+                    { 22, "Edirne", 1 },
+                    { 23, "Elazığ", 1 },
+                    { 24, "Erzincan", 1 },
+                    { 25, "Erzurum", 1 },
+                    { 26, "Eskişehir", 1 },
+                    { 27, "Gaziantep", 1 },
+                    { 28, "Giresun", 1 },
+                    { 29, "Gümüşhane", 1 },
+                    { 30, "Hakkari", 1 },
+                    { 31, "Hatay", 1 },
+                    { 32, "Isparta", 1 },
+                    { 33, "Mersin", 1 },
+                    { 34, "İstanbul", 1 },
+                    { 35, "İzmir", 1 },
+                    { 36, "Kars", 1 },
+                    { 37, "Kastamonu", 1 },
+                    { 38, "Kayseri", 1 },
+                    { 39, "Kırklareli", 1 },
+                    { 40, "Kırşehir", 1 },
+                    { 41, "Kocaeli", 1 },
+                    { 42, "Konya", 1 },
+                    { 43, "Kütahya", 1 },
+                    { 44, "Malatya", 1 },
+                    { 45, "Manisa", 1 },
+                    { 46, "Kahramanmaraş", 1 },
+                    { 47, "Mardin", 1 },
+                    { 48, "Muğla", 1 },
+                    { 49, "Muş", 1 },
+                    { 50, "Nevşehir", 1 },
+                    { 51, "Niğde", 1 },
+                    { 52, "Ordu", 1 },
+                    { 53, "Rize", 1 },
+                    { 54, "Sakarya", 1 },
+                    { 55, "Samsun", 1 },
+                    { 56, "Siirt", 1 },
+                    { 57, "Sinop", 1 },
+                    { 58, "Sivas", 1 },
+                    { 59, "Tekirdağ", 1 },
+                    { 60, "Tokat", 1 },
+                    { 61, "Trabzon", 1 },
+                    { 62, "Tunceli", 1 },
+                    { 63, "Şanlıurfa", 1 },
+                    { 64, "Uşak", 1 },
+                    { 65, "Van", 1 },
+                    { 66, "Yozgat", 1 },
+                    { 67, "Zonguldk", 1 },
+                    { 68, "Aksaray", 1 },
+                    { 69, "Bayburt", 1 },
+                    { 70, "Karaman", 1 },
+                    { 71, "Kırıkkale", 1 },
+                    { 72, "Batman", 1 },
+                    { 73, "Şırnak", 1 },
+                    { 74, "Bartın", 1 },
+                    { 75, "Ardahan", 1 },
+                    { 76, "Iğdır", 1 },
+                    { 77, "Yalova", 1 },
+                    { 78, "Karabük", 1 },
+                    { 79, "Kilis", 1 },
+                    { 80, "Osmaniye", 1 },
+                    { 81, "Düzce", 1 }
                 });
 
             migrationBuilder.InsertData(
@@ -339,6 +454,11 @@ namespace StoreApp.Migrations
                     { 19, "Navy" },
                     { 20, "Teal" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "Country",
+                columns: new[] { "CountryId", "CountryName" },
+                values: new object[] { 1, "Türkiye" });
 
             migrationBuilder.InsertData(
                 table: "Products",
@@ -435,7 +555,13 @@ namespace StoreApp.Migrations
                 name: "CartLine");
 
             migrationBuilder.DropTable(
+                name: "City");
+
+            migrationBuilder.DropTable(
                 name: "Colors");
+
+            migrationBuilder.DropTable(
+                name: "Country");
 
             migrationBuilder.DropTable(
                 name: "CouponCodes");

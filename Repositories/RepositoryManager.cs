@@ -16,9 +16,13 @@ namespace Repositories
         private readonly IOrderRepository _orderRepository;
         private readonly IColorRepository _colorRepository;
         private readonly ICouponCodeRepository _couponCodeRepository;
+        private readonly ICountryRepository _countryRepository;
+        private readonly ICityRepository _cityRepository;
 
 
-        public RepositoryManager(IProductRepository productRepository, RepositoryContext context, ICategoryRepository categoryRepository,IOrderRepository orderRepository, IColorRepository colorRepository, ICouponCodeRepository couponCodeRepository)
+        public RepositoryManager(IProductRepository productRepository, RepositoryContext context, ICategoryRepository categoryRepository,
+            IOrderRepository orderRepository, IColorRepository colorRepository, ICouponCodeRepository couponCodeRepository,ICountryRepository countryRepository,
+            ICityRepository cityRepository )
         {
             _productRepository = productRepository;
             _context = context;
@@ -26,6 +30,8 @@ namespace Repositories
             _orderRepository = orderRepository;
             _colorRepository = colorRepository;
             _couponCodeRepository = couponCodeRepository;
+            _countryRepository = countryRepository;
+            _cityRepository = cityRepository;
         }
 
         public IProductRepository Product => _productRepository;
@@ -36,6 +42,8 @@ namespace Repositories
         public IColorRepository Color => _colorRepository;
         public ICouponCodeRepository CouponCode => _couponCodeRepository;
 
+        public ICountryRepository Country => _countryRepository;
+        public ICityRepository City => _cityRepository;
 
         public void Save()
         {

@@ -59,6 +59,8 @@ namespace StoreApp.Infrastructure.Extensions
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IColorRepository, ColorRepository>();
             services.AddScoped<ICouponCodeRepository,CouponCodeRepository>();
+            services.AddScoped<ICityRepository, CityRepository>();
+            services.AddScoped<ICountryRepository, CountryRepository>();
 
         }
 
@@ -71,6 +73,8 @@ namespace StoreApp.Infrastructure.Extensions
             services.AddScoped<IAuthService, AuthManager>();
             services.AddScoped<IColorService, ColorManager>();
             services.AddScoped<ICouponCodeService, CouponCodeManager>();
+            services.AddScoped<ICityService, CityManager>();
+            services.AddScoped<ICountryService , CountryManager>();
         }
         public static void ConfigureRouting(this IServiceCollection services)
         {

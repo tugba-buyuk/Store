@@ -50,6 +50,7 @@ namespace Entities.Models
         public decimal ComputeTotalValue() =>
             Lines.Sum(e => e.Product.Price * e.Quantity) - Discount;
 
+        public decimal ComputeTotalWithoutDescount() => Lines.Sum(e => e.Product.Price * e.Quantity);
         public virtual void Clear()
         {
             Lines.Clear();

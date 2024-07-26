@@ -76,6 +76,512 @@ namespace StoreApp.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Entities.Models.City", b =>
+                {
+                    b.Property<int>("CityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CityName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("CountryId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("CityId");
+
+                    b.ToTable("City");
+
+                    b.HasData(
+                        new
+                        {
+                            CityId = 1,
+                            CityName = "Adana",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 2,
+                            CityName = "Adıyaman",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 3,
+                            CityName = "Afyonkarahisar",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 4,
+                            CityName = "Ağrı",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 5,
+                            CityName = "Amasya",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 6,
+                            CityName = "Ankara",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 7,
+                            CityName = "Antalya",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 8,
+                            CityName = "Artvin",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 9,
+                            CityName = "Aydın",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 10,
+                            CityName = "Balıkesir",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 11,
+                            CityName = "Bilecik",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 12,
+                            CityName = "Bingöl",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 13,
+                            CityName = "Bitlis",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 14,
+                            CityName = "Bolu",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 15,
+                            CityName = "Burdur",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 16,
+                            CityName = "Bursa",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 17,
+                            CityName = "Çanakkale",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 18,
+                            CityName = "Çankırı",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 19,
+                            CityName = "Çorum",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 20,
+                            CityName = "Denizli",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 21,
+                            CityName = "Diyarbakır",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 22,
+                            CityName = "Edirne",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 23,
+                            CityName = "Elazığ",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 24,
+                            CityName = "Erzincan",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 25,
+                            CityName = "Erzurum",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 26,
+                            CityName = "Eskişehir",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 27,
+                            CityName = "Gaziantep",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 28,
+                            CityName = "Giresun",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 29,
+                            CityName = "Gümüşhane",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 30,
+                            CityName = "Hakkari",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 31,
+                            CityName = "Hatay",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 32,
+                            CityName = "Isparta",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 33,
+                            CityName = "Mersin",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 34,
+                            CityName = "İstanbul",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 35,
+                            CityName = "İzmir",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 36,
+                            CityName = "Kars",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 37,
+                            CityName = "Kastamonu",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 38,
+                            CityName = "Kayseri",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 39,
+                            CityName = "Kırklareli",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 40,
+                            CityName = "Kırşehir",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 41,
+                            CityName = "Kocaeli",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 42,
+                            CityName = "Konya",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 43,
+                            CityName = "Kütahya",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 44,
+                            CityName = "Malatya",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 45,
+                            CityName = "Manisa",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 46,
+                            CityName = "Kahramanmaraş",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 47,
+                            CityName = "Mardin",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 48,
+                            CityName = "Muğla",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 49,
+                            CityName = "Muş",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 50,
+                            CityName = "Nevşehir",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 51,
+                            CityName = "Niğde",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 52,
+                            CityName = "Ordu",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 53,
+                            CityName = "Rize",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 54,
+                            CityName = "Sakarya",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 55,
+                            CityName = "Samsun",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 56,
+                            CityName = "Siirt",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 57,
+                            CityName = "Sinop",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 58,
+                            CityName = "Sivas",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 59,
+                            CityName = "Tekirdağ",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 60,
+                            CityName = "Tokat",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 61,
+                            CityName = "Trabzon",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 62,
+                            CityName = "Tunceli",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 63,
+                            CityName = "Şanlıurfa",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 64,
+                            CityName = "Uşak",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 65,
+                            CityName = "Van",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 66,
+                            CityName = "Yozgat",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 67,
+                            CityName = "Zonguldk",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 68,
+                            CityName = "Aksaray",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 69,
+                            CityName = "Bayburt",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 70,
+                            CityName = "Karaman",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 71,
+                            CityName = "Kırıkkale",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 72,
+                            CityName = "Batman",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 73,
+                            CityName = "Şırnak",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 74,
+                            CityName = "Bartın",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 75,
+                            CityName = "Ardahan",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 76,
+                            CityName = "Iğdır",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 77,
+                            CityName = "Yalova",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 78,
+                            CityName = "Karabük",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 79,
+                            CityName = "Kilis",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 80,
+                            CityName = "Osmaniye",
+                            CountryId = 1
+                        },
+                        new
+                        {
+                            CityId = 81,
+                            CityName = "Düzce",
+                            CountryId = 1
+                        });
+                });
+
             modelBuilder.Entity("Entities.Models.Color", b =>
                 {
                     b.Property<int>("ColorId")
@@ -190,6 +696,28 @@ namespace StoreApp.Migrations
                         {
                             ColorId = 20,
                             ColorName = "Teal"
+                        });
+                });
+
+            modelBuilder.Entity("Entities.Models.Country", b =>
+                {
+                    b.Property<int>("CountryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CountryName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CountryId");
+
+                    b.ToTable("Country");
+
+                    b.HasData(
+                        new
+                        {
+                            CountryId = 1,
+                            CountryName = "Türkiye"
                         });
                 });
 
@@ -452,19 +980,19 @@ namespace StoreApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "0f223c0a-87ff-4100-9ff8-33b6b337ed3a",
+                            Id = "15bf888d-face-4694-9357-01bd386772d5",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "6e35319f-4bd0-4881-9639-c40937e2c480",
+                            Id = "c11a5039-ed90-48e6-882f-68b67db7bb03",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "c1928881-0877-4c52-9840-e340af92d240",
+                            Id = "7e659602-6180-4b23-b22f-4c9ed02c628a",
                             Name = "Editor",
                             NormalizedName = "EDITOR"
                         });
