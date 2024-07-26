@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace StoreApp.Migrations
 {
     /// <inheritdoc />
-    public partial class firstINIT : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -126,14 +126,17 @@ namespace StoreApp.Migrations
                 {
                     OrderId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Line1 = table.Column<string>(type: "TEXT", nullable: false),
-                    Line2 = table.Column<string>(type: "TEXT", nullable: true),
-                    Line3 = table.Column<string>(type: "TEXT", nullable: true),
+                    FullName = table.Column<string>(type: "TEXT", nullable: false),
                     City = table.Column<string>(type: "TEXT", nullable: true),
+                    Country = table.Column<string>(type: "TEXT", nullable: true),
+                    FullAddress = table.Column<string>(type: "TEXT", nullable: false),
                     GiftWrap = table.Column<bool>(type: "INTEGER", nullable: false),
                     Shipped = table.Column<bool>(type: "INTEGER", nullable: false),
-                    OrderAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    OrderStatus = table.Column<string>(type: "TEXT", nullable: false),
+                    OrderAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Email = table.Column<string>(type: "TEXT", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -326,9 +329,9 @@ namespace StoreApp.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "15bf888d-face-4694-9357-01bd386772d5", null, "User", "USER" },
-                    { "7e659602-6180-4b23-b22f-4c9ed02c628a", null, "Editor", "EDITOR" },
-                    { "c11a5039-ed90-48e6-882f-68b67db7bb03", null, "Admin", "ADMIN" }
+                    { "365ebfd5-abee-43a0-8d33-a86230a88991", null, "Editor", "EDITOR" },
+                    { "840db0c6-3de0-4724-becd-71af48b08946", null, "Admin", "ADMIN" },
+                    { "cdf13bad-8694-4150-a3a2-d8f15f6b758a", null, "User", "USER" }
                 });
 
             migrationBuilder.InsertData(

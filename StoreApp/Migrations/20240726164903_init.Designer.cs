@@ -11,8 +11,8 @@ using Repositories;
 namespace StoreApp.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20240726155651_firstINIT")]
-    partial class firstINIT
+    [Migration("20240726164903_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -754,28 +754,40 @@ namespace StoreApp.Migrations
                     b.Property<string>("City")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Country")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FullAddress")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("GiftWrap")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Line1")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Line2")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Line3")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("OrderAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("OrderStatus")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("Shipped")
                         .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("OrderId");
 
@@ -983,19 +995,19 @@ namespace StoreApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "15bf888d-face-4694-9357-01bd386772d5",
+                            Id = "cdf13bad-8694-4150-a3a2-d8f15f6b758a",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "c11a5039-ed90-48e6-882f-68b67db7bb03",
+                            Id = "840db0c6-3de0-4724-becd-71af48b08946",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "7e659602-6180-4b23-b22f-4c9ed02c628a",
+                            Id = "365ebfd5-abee-43a0-8d33-a86230a88991",
                             Name = "Editor",
                             NormalizedName = "EDITOR"
                         });

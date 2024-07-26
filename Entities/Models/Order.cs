@@ -11,16 +11,21 @@ namespace Entities.Models
     {
         public int OrderId { get; set; }
         public ICollection<CartLine> Lines { get; set; }=new List<CartLine>();
-        [Required(ErrorMessage="Name is required")]
-        public String? Name {  get; set; }
-        [Required(ErrorMessage = "Line1 is required")]
-        public String? Line1 {  get; set; }
-        public String? Line2 {  get; set; }
-        public String? Line3 {  get; set; }
+        [Required(ErrorMessage="Full Name is required")]
+        public String? FullName {  get; set; }
         public String? City {  get; set; }
+        public String? Country { get; set; }
+        [Required(ErrorMessage ="Full Address is requuired")]
+        public String FullAddress { get; set; }=String.Empty;
         public bool GiftWrap { get; set; }
         public bool Shipped { get; set; }
+        public String OrderStatus { get; set; } = String.Empty;
         public DateTime OrderAt { get; set; }=DateTime.Now;
+        [Required(ErrorMessage ="Email is required")]
+        public String? Email { get; set; }
+        [Required(ErrorMessage ="Phone Number is required")]
+        public String? PhoneNumber { get; set; }
+        public Decimal TotalPrice { get; set; }
 
     }
 }

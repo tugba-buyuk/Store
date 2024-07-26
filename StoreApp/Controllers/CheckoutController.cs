@@ -27,5 +27,28 @@ namespace StoreApp.Controllers
                 Cities=cities
             });
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public IActionResult CompleteOrder([FromForm] Order order)
+        {
+            if (_cart.Lines.Count == 0)
+            {
+                ModelState.AddModelError("", "Sorry your cart is empty.");
+            }
+            if (ModelState.IsValid)
+            {
+                order.Lines = _cart.Lines.ToArray();
+                _manager.OrderService.SaveOrder(order);
+                _cart.Clear();
+                return RedirectToPage("/Complete", new { OrderId = order.OrderId });
+            }
+            else
+            {
+                return View();
+            }
+
+        }
     }
 }

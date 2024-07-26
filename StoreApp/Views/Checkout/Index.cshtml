@@ -10,90 +10,100 @@
 }
 
 <div class="container" style="padding-top:150px; padding-bottom:50px;">
+    <div class="text-danger" asp-validation-summary="All"></div>
     <div class="row w-100 justify-content-between">
-        <div class="col-md-7 p-3" style="border:2px solid #e6e6e6">
-            <div class="address-area d-flex flex-column">
-                <h3>Delivery Address</h3>
-                <div class="d-flex flex-column">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="fullName">Full Name</label>
-                            <input id="fullName" type="text" class="form-control" placeholder="Full Name*" />
+        <form method="post" asp-action="CompleteOrder" asp-asp-controller="Checkout">
+            <div class="col-md-7 p-3" style="border:2px solid #e6e6e6">
+                <div class="address-area d-flex flex-column">
+                    <h3>Delivery Address</h3>
+                    <div class="d-flex flex-column">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="Order.FullName">Full Name</label>
+                                <input id="fullName" asp-for="Order.FullName" type="text" class="form-control" placeholder="Full Name*" />
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Order.PhoneNumber">Phone Number</label>
+                                <input id="phoneNumber" type="text" asp-for="Order.PhoneNumber" class="form-control" placeholder="Phone Number*" />
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="phoneNumber">Phone Number</label>
-                            <input id="phoneNumber" type="text" class="form-control" placeholder="Phone Number*" />
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="country" asp-for="Order.Country">Country</label>
+                                <select id="country" asp-for="Order.Country" class="form-control">
+                                    <option value="">Select Country*</option>
+                                    <!-- Add your country options here -->
+                                    @foreach(Country country in Model.Countries)
+                                    {
+                                        <option value="@country.CountryName">@country.CountryName</option>
+                                    }
+                                    <!-- More countries -->
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Order.City">City</label>
+                                <select asp-for="Order.City" id="city" class="form-control">
+                                    <option value="">Select City*</option>
+                                    <!-- Add your city options here -->
+                                    @foreach(City city in Model.Cities)
+                                    {
+                                        <option value="@city.CityName">@city.CityName</option>
+                                    }
+                                    <!-- More cities -->
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="country">Country</label>
-                            <select id="country" class="form-control">
-                                <option value="">Select Country*</option>
-                                <!-- Add your country options here -->
-                                @foreach(Country country in Model.Countries)
-                                {
-                                    <option value="@country.CountryName">@country.CountryName</option>
-                                }
-                                <!-- More countries -->
-                            </select>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label asp-for="Order.Email">E-Mail</label>
+                                <input asp-for="Order.Email" id="email" type="email" class="form-control" placeholder="E-Mail*" />
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="city">City</label>
-                            <select id="city" class="form-control">
-                                <option value="">Select City*</option>
-                                <!-- Add your city options here -->
-                                @foreach(City city in Model.Cities)
-                                {
-                                    <option value="@city.CityName">@city.CityName</option>
-                                }
-                                <!-- More cities -->
-                            </select>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label asp-for="Order.FullAddress">Full Address</label>
+                                <textarea id="fullAddress" asp-for="Order.FullAddress" class="form-control" placeholder="Full Address*" rows="3"></textarea>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <label for="email">E-Mail</label>
-                            <input id="email" type="email" class="form-control" placeholder="E-Mail*" />
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-12">
-                            <label for="fullAddress">Full Address</label>
-                            <textarea id="fullAddress" class="form-control" placeholder="Full Address*" rows="3"></textarea>
+                        <div class="row mb-3">
+                            <div class="col-md-12 d-flex gap-2">
+                                <input type="checkbox" asp-for="Order.GiftWrap" />
+                                <label>Gift wrap these items.</label>
+
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4 border border-light rounded p-4">
-            <div class="d-flex align-items-center mb-4">
-                <i class="fa-solid fa-truck fa-2x me-2"></i>
-                <p class="mb-0">This Order Ships Free!</p>
+            <div class="col-md-4 border border-light rounded p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <i class="fa-solid fa-truck fa-2x me-2"></i>
+                    <p class="mb-0">This Order Ships Free!</p>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <strong><h5 class="mb-0">Item (@Model.Cart.Lines.Count):</h5></strong>
+                    <h5 class="mb-0">@totalPrice.ToString("c")</h5>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <strong><h5 class="mb-0">Promotional Savings:</h5></strong>
+                    <h5 class="mb-0 text-danger">-@difference.ToString("c")</h5>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <strong><h5 class="mb-0">Subtotal After Discount:</h5></strong>
+                    <h5 class="mb-0">@discountTotalPrice.ToString("c")</h5>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <strong><h5 class="mb-0">Shipping:</h5></strong>
+                    <h5 class="mb-0">@shipping.ToString("c")</h5>
+                </div>
+                <div class="d-flex justify-content-between mb-4 border-top pt-2">
+                    <strong><h3 class="mb-0">TOTAL:</h3></strong>
+                    <h3 class="mb-0">@total.ToString("c")</h3>
+                    <input type="hidden" asp-for="Order.TotalPrice" value="@total" />
+                </div>
+                <button class="btn btn-primary w-100" type="submit">SUBMIT ORDER</button>
             </div>
-            <div class="d-flex justify-content-between mb-3">
-                <strong><h5 class="mb-0">Item (@Model.Cart.Lines.Count):</h5></strong>
-                <h5 class="mb-0">@totalPrice.ToString("c")</h5>
-            </div>
-            <div class="d-flex justify-content-between mb-3">
-                <strong><h5 class="mb-0">Promotional Savings:</h5></strong>
-                <h5 class="mb-0 text-danger">-@difference.ToString("c")</h5>
-            </div>
-            <div class="d-flex justify-content-between mb-3">
-                <strong><h5 class="mb-0">Subtotal After Discount:</h5></strong>
-                <h5 class="mb-0">@discountTotalPrice.ToString("c")</h5>
-            </div>
-            <div class="d-flex justify-content-between mb-3">
-                <strong><h5 class="mb-0">Shipping:</h5></strong>
-                <h5 class="mb-0">@shipping.ToString("c")</h5>
-            </div>
-            <div class="d-flex justify-content-between mb-4 border-top pt-2">
-                <strong><h3 class="mb-0">TOTAL:</h3></strong>
-                <h3 class="mb-0">@total.ToString("c")</h3>
-            </div>
-            <button class="btn btn-primary w-100">SUBMIT ORDER</button>
-        </div>
-
+        </form>
     </div>
 </div>
 
