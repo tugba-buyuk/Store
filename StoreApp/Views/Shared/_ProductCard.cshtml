@@ -54,7 +54,7 @@
                                         <select class="form-control" id="sizeSelect" name="productSize">
                                             @foreach (var size in Model.Sizes)
                                             {
-                                                <option  value=@size>@size</option>
+                                                <option value=@size>@size</option>
                                             }
                                         </select>
                                     </div>
@@ -67,7 +67,7 @@
                                         <select class="form-control" id="colorSelect" name="productColor">
                                             @foreach (var color in Model.ColorNames)
                                             {
-                                                <option  value=@color>@color</option>
+                                                <option value=@color>@color</option>
                                             }
                                         </select>
                                     </div>
@@ -116,23 +116,4 @@
         </div>
     </div>
 </div>
-        </div>
-    </div>
-</div>
-
-@section Scripts {
-    <script>
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const thumbnails = document.querySelectorAll('.thumbnail-img');
-            const mainImage = document.getElementById('mainImage');
-
-            thumbnails.forEach(thumbnail => {
-                thumbnail.addEventListener('click', function () {
-                    const newSrc = thumbnail.getAttribute('src');
-                    mainImage.setAttribute('src', newSrc);
-                });
-            });
-        });
-    </script>
-}
+        

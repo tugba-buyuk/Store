@@ -1,11 +1,12 @@
 ﻿/*Navbar*/
 .header-section {
-    position: absolute;
+    position: fixed;
     width: 100%;
-    padding: 30px 33px 0;
+    padding: 20px;
     left: 0;
     top: 0;
     z-index: 99;
+    background-color:#FFF;
 }
 
 .site-logo {
@@ -49,8 +50,9 @@
             display: inline-block;
             font-size: 14px;
             text-transform: uppercase;
+            text-decoration:none;
             font-weight: 600;
-            color: #fff;
+            color: #000;
             padding: 8px 5px 0;
             margin-left: 50px;
         }

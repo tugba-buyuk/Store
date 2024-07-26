@@ -75,7 +75,7 @@ namespace StoreApp.Pages
                 cart.DiscountedTotalPrice = newTotal;
                 HttpContext.Session.SetJson<Cart>("cart", cart);
                 Cart = SessionCart.GetCart(HttpContext.RequestServices);
-                TempData["CouponMessage"] = "Coupon applied successfully.";
+                TempData["CouponMessageSuccess"] = "Coupon applied successfully.";
                 
             }
             

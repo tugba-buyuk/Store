@@ -73,10 +73,10 @@
 <section class="section-space py-5">
     <div class="container">
         <div class="row">
-            <div class="col-lg-7 mx-auto text-center mb-5">
+            <div class="mx-auto text-center mb-5">
                 <h5 class="fw-bold fs-3 fs-lg-5 lh-sm mb-3">Shop By Category</h5>
             </div>
-            <div class="col-12">
+            <div class="col-lg-12">
                 <div class="product-section-title">
                     <ul class="nav nav-pills d-flex justify-content-center" id="genderTab" role="tablist">
                         <li class="nav-item">
@@ -167,7 +167,9 @@
                                         }
                                         @foreach (Product prd in menShoesList)
                                         {
-                                            <partial name="_ProductCard" model="prd" />
+                                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                                <partial name="_ProductCard" model="prd" />
+                                            </div>
                                         }
                                     </div>
                                 </div>
@@ -179,7 +181,9 @@
                                         }
                                         @foreach (Product prd in menTShirtList)
                                         {
-                                            <partial name="_ProductCard" model="prd" />
+                                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                                <partial name="_ProductCard" model="prd" />
+                                            </div>
                                         }
                                     </div>
                                 </div>
@@ -191,7 +195,9 @@
                                         }
                                         @foreach (Product prd in menPantList)
                                         {
-                                            <partial name="_ProductCard" model="prd" />
+                                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                                <partial name="_ProductCard" model="prd" />
+                                            </div>
                                         }
                                     </div>
                                 </div>
