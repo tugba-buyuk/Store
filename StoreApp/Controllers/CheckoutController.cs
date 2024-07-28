@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
 using StoreApp.Models;
+using Stripe.Checkout;
 
 namespace StoreApp.Controllers
 {
@@ -42,13 +43,50 @@ namespace StoreApp.Controllers
                 order.Lines = _cart.Lines.ToArray();
                 _manager.OrderService.SaveOrder(order);
                 _cart.Clear();
-                return RedirectToPage("/Complete", new { OrderId = order.OrderId });
+                var orderId = order.OrderId;
+                return RedirectToAction("Payment", new { orderId = orderId });
             }
             else
             {
                 return View();
             }
 
+        }
+        public IActionResult Payment(int orderId)
+        {
+            var order=_manager.OrderService.GetOneOrder(orderId);
+            var domain = "http://localhost:5260";
+
+            var options = new SessionCreateOptions
+            {
+                SuccessUrl = domain + $"Checkout/Success",
+                CancelUrl = domain + "Checkout/Login",
+                LineItems = new List<SessionLineItemOptions>(),
+                Mode = "payment"
+            };
+            
+            foreach(var item in order.Lines)
+            {
+                var sessionListItem = new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = (long)(order.TotalPrice),
+                        Currency = "TL",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = item.Product.ProductName,
+                        }
+
+                    },
+                    Quantity=item.Quantity
+                };
+                options.LineItems.Add(sessionListItem);
+            }
+            var service = new SessionService();
+            Session session = service.Create(options);
+            Response.Headers.Add("Location",session.Url);
+            return new StatusCodeResult(303);
         }
     }
 }

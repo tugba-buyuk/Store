@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using StoreApp.Infrastructure.Extensions;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,8 @@ app.UseSession();
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 app.UseAuthentication();
 app.UseAuthorization();

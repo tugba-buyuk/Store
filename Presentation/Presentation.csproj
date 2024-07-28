@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetcore.Mvc.Core" Version="2.2.5" />
+    <PackageReference Include="Stripe.net" Version="45.5.0" />
   </ItemGroup>
 
   <ItemGroup>
