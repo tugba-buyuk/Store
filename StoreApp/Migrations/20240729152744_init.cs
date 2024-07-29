@@ -113,7 +113,8 @@ namespace StoreApp.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     CouponCodeName = table.Column<string>(type: "TEXT", nullable: false),
                     CouponCodeDiscount = table.Column<int>(type: "INTEGER", nullable: false),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false)
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    StripeCouponId = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -137,7 +138,8 @@ namespace StoreApp.Migrations
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     PhoneNumber = table.Column<string>(type: "TEXT", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "TEXT", nullable: false),
-                    DiscountAmount = table.Column<decimal>(type: "TEXT", nullable: false)
+                    DiscountAmount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    CouponCode = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -330,9 +332,9 @@ namespace StoreApp.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "306edac4-6cf0-49b7-aeba-bb285c34b23a", null, "User", "USER" },
-                    { "42578469-9ff3-43fc-b795-10b00f50c68b", null, "Editor", "EDITOR" },
-                    { "69337def-8128-449d-9a03-b915d9dacab0", null, "Admin", "ADMIN" }
+                    { "864c35f9-762a-4ba0-929b-9325b6613ae0", null, "User", "USER" },
+                    { "add55a90-9a09-44f8-aa19-75dc4ec41f4d", null, "Admin", "ADMIN" },
+                    { "e67409be-8d9f-4b39-966d-3276308ee792", null, "Editor", "EDITOR" }
                 });
 
             migrationBuilder.InsertData(

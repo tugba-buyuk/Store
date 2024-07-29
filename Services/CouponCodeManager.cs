@@ -3,6 +3,7 @@ using Entities.Dtos;
 using Entities.Models;
 using Repositories.Contracts;
 using Services.Contracts;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +33,15 @@ namespace Services
         public void CreateCouponCode(CouponCodeDtoForCreate couponCodeDto)
         {
             CouponCode couponCode= _mapper.Map<CouponCode>(couponCodeDto);
+            var couponOptions = new CouponCreateOptions
+            {
+                PercentOff = couponCodeDto.CouponCodeDiscount,
+                Duration = "forever",
+                Id = couponCodeDto.CouponCodeName,
+            };
+            var couponService = new CouponService();
+            Coupon stripeCoupon = couponService.Create(couponOptions);
+            couponCode.StripeCouponId = stripeCoupon.Id;
             _manager.CouponCode.CreateOneCouponCode(couponCode);
             _manager.Save();
         }

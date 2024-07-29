@@ -737,6 +737,10 @@ namespace StoreApp.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("StripeCouponId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("CouponCodeId");
 
                     b.ToTable("CouponCodes");
@@ -752,6 +756,10 @@ namespace StoreApp.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Country")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CouponCode")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("DiscountAmount")
@@ -995,19 +1003,19 @@ namespace StoreApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "306edac4-6cf0-49b7-aeba-bb285c34b23a",
+                            Id = "864c35f9-762a-4ba0-929b-9325b6613ae0",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "69337def-8128-449d-9a03-b915d9dacab0",
+                            Id = "add55a90-9a09-44f8-aa19-75dc4ec41f4d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "42578469-9ff3-43fc-b795-10b00f50c68b",
+                            Id = "e67409be-8d9f-4b39-966d-3276308ee792",
                             Name = "Editor",
                             NormalizedName = "EDITOR"
                         });

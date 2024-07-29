@@ -27,6 +27,7 @@ namespace Entities.Models
         public String? PhoneNumber { get; set; }
         public Decimal TotalPrice { get; set; }
         public Decimal DiscountAmount { get; set; }
+        public string CouponCode { get; set; }=string.Empty;
 
     }
 }

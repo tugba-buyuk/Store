@@ -77,7 +77,7 @@
                 <div class="coupon-area d-flex">
                     <form method="post">
                         <div class="apply-coupon d-flex">
-                            <input type="text" name="couponCode" placeholder="Coupon Code" />
+                            <input type="text" name="couponCode" placeholder="Coupon Code" asp-for="CouponCode"/>
                             @{
                                 var total = Model.Cart.ComputeTotalValue();
                             }
@@ -91,7 +91,7 @@
                         </div>
                     </form>
                     <a asp-action="Index" asp-controller="Home">Home</a>
-                    <a asp-action="Index" asp-controller="Checkout">
+                    <a asp-action="Index" asp-controller="Checkout" asp-route-couponCode="@Model.CouponCode">
                         Proceed to Checkout
                     </a>
                     

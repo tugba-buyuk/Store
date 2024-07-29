@@ -8,6 +8,7 @@ namespace StoreApp.Models
         public Cart Cart { get; set; }
         public IEnumerable<Country> Countries { get; set; } = Enumerable.Empty<Country>();
         public IEnumerable<City> Cities { get; set; } = Enumerable.Empty<City>();
-        
+        public string CouponCode { get; set; }
+
     }
 }

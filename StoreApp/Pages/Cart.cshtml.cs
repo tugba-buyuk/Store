@@ -14,6 +14,7 @@ namespace StoreApp.Pages
 
         public Cart Cart { get; set; }
         public string ReturnUrl { get; set; } = "/";
+        public string CouponCode { get; set; }
 
         public CartModel(IServiceManager manager, Cart cartService)
         {
@@ -75,6 +76,7 @@ namespace StoreApp.Pages
                 cart.DiscountedTotalPrice = newTotal;
                 HttpContext.Session.SetJson<Cart>("cart", cart);
                 Cart = SessionCart.GetCart(HttpContext.RequestServices);
+                CouponCode = couponCode;
                 TempData["CouponMessageSuccess"] = "Coupon applied successfully.";
                 
             }

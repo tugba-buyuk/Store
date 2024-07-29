@@ -99,6 +99,7 @@
                     <strong><h3 class="mb-0">TOTAL:</h3></strong>
                     <h3 class="mb-0">@total.ToString("c")</h3>
                     <input type="hidden" asp-for="Order.TotalPrice" value="@total" />
+                    <input type="hidden" name="CouponCode" value="@Model.CouponCode" />
                 </div>
                 <button class="btn btn-primary w-100" type="submit">SUBMIT ORDER</button>
             </div>

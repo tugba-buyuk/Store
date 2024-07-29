@@ -12,5 +12,6 @@ namespace Entities.Models
         public string CouponCodeName { get; set; } = string.Empty;
         public int CouponCodeDiscount { get; set; }
         public bool IsActive { get; set; }
+        public string StripeCouponId { get; set; }
     }
 }
