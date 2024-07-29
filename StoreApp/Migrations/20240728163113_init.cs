@@ -136,7 +136,8 @@ namespace StoreApp.Migrations
                     OrderAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     PhoneNumber = table.Column<string>(type: "TEXT", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "TEXT", nullable: false)
+                    TotalPrice = table.Column<decimal>(type: "TEXT", nullable: false),
+                    DiscountAmount = table.Column<decimal>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -329,9 +330,9 @@ namespace StoreApp.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "365ebfd5-abee-43a0-8d33-a86230a88991", null, "Editor", "EDITOR" },
-                    { "840db0c6-3de0-4724-becd-71af48b08946", null, "Admin", "ADMIN" },
-                    { "cdf13bad-8694-4150-a3a2-d8f15f6b758a", null, "User", "USER" }
+                    { "306edac4-6cf0-49b7-aeba-bb285c34b23a", null, "User", "USER" },
+                    { "42578469-9ff3-43fc-b795-10b00f50c68b", null, "Editor", "EDITOR" },
+                    { "69337def-8128-449d-9a03-b915d9dacab0", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(

@@ -26,6 +26,7 @@ namespace Entities.Models
         [Required(ErrorMessage ="Phone Number is required")]
         public String? PhoneNumber { get; set; }
         public Decimal TotalPrice { get; set; }
+        public Decimal DiscountAmount { get; set; }
 
     }
 }

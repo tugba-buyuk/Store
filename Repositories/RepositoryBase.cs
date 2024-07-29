@@ -44,6 +44,18 @@ namespace Repositories
                 : _context.Set<T>().AsNoTracking().SingleOrDefault(expression);
         }
 
+        public IQueryable<T> QueryWithCondition(Expression<Func<T, bool>> expression, bool trackChanges)
+        {
+            var query = _context.Set<T>().AsQueryable();
+
+            if (!trackChanges)
+            {
+                query = query.AsNoTracking();
+            }
+
+            return query.Where(expression);
+        }
+
         public void Update(T entity)
         {
             _context.Set<T>().Update(entity);

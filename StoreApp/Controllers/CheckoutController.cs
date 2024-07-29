@@ -11,7 +11,7 @@ namespace StoreApp.Controllers
         private readonly IServiceManager _manager;
         private readonly Cart _cart;
 
-        public CheckoutController(IServiceManager manager ,Cart cart)
+        public CheckoutController(IServiceManager manager, Cart cart)
         {
             _manager = manager;
             _cart = cart;
@@ -20,12 +20,12 @@ namespace StoreApp.Controllers
         {
             cart = SessionCart.GetCart(HttpContext.RequestServices);
             var countries = _manager.CountryService.GetAllCountries(false);
-            var cities=_manager.CityService.GetAllCities(false);
+            var cities = _manager.CityService.GetAllCities(false);
             return View(new CheckoutViewModel
             {
                 Cart = cart,
-                Countries= countries,
-                Cities=cities
+                Countries = countries,
+                Cities = cities
             });
         }
 
@@ -41,6 +41,7 @@ namespace StoreApp.Controllers
             if (ModelState.IsValid)
             {
                 order.Lines = _cart.Lines.ToArray();
+                order.DiscountAmount = _cart.Discount;
                 _manager.OrderService.SaveOrder(order);
                 _cart.Clear();
                 var orderId = order.OrderId;
@@ -54,38 +55,49 @@ namespace StoreApp.Controllers
         }
         public IActionResult Payment(int orderId)
         {
-            var order=_manager.OrderService.GetOneOrder(orderId);
+            var order = _manager.OrderService.GetOneOrder(orderId);
             var domain = "http://localhost:5260";
+            var couponCode = "TUGBA15";
+            var discount=order.DiscountAmount;
+
 
             var options = new SessionCreateOptions
             {
-                SuccessUrl = domain + $"Checkout/Success",
-                CancelUrl = domain + "Checkout/Login",
+                SuccessUrl = domain + $"/Checkout/Success",
+                CancelUrl = domain + "/account/login",
+                //discounts = new list<sessiondiscountoptions>
+                //{
+                //    new sessiondiscountoptions
+                //    {
+                //        coupon = "dk58rgrz"
+                //    }
+                //},
                 LineItems = new List<SessionLineItemOptions>(),
                 Mode = "payment"
             };
-            
-            foreach(var item in order.Lines)
+
+            foreach (var item in order.Lines)
             {
                 var sessionListItem = new SessionLineItemOptions
                 {
                     PriceData = new SessionLineItemPriceDataOptions
                     {
-                        UnitAmount = (long)(order.TotalPrice),
-                        Currency = "TL",
+                        UnitAmount = (long)((item.Product.Price * item.Quantity ) * 100),
+                        Currency = "usd",
                         ProductData = new SessionLineItemPriceDataProductDataOptions
                         {
                             Name = item.Product.ProductName,
                         }
 
                     },
-                    Quantity=item.Quantity
+                    Quantity = item.Quantity
                 };
                 options.LineItems.Add(sessionListItem);
             }
+            
             var service = new SessionService();
             Session session = service.Create(options);
-            Response.Headers.Add("Location",session.Url);
+            Response.Headers.Add("Location", session.Url);
             return new StatusCodeResult(303);
         }
     }

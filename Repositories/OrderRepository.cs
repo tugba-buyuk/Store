@@ -32,7 +32,11 @@ namespace Repositories
 
         public Order? GetOneOrder(int id)
         {
-            return FindByCondition(o => o.OrderId.Equals(id),false);
+            
+            return QueryWithCondition(o => o.OrderId == id, false)
+                   .Include(o => o.Lines) 
+                   .ThenInclude(cl => cl.Product) 
+                   .FirstOrDefault(); 
         }
 
         public void SaveOrder(Order order)

@@ -11,7 +11,7 @@ using Repositories;
 namespace StoreApp.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20240726164903_init")]
+    [Migration("20240728163113_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -757,6 +757,9 @@ namespace StoreApp.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -995,19 +998,19 @@ namespace StoreApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "cdf13bad-8694-4150-a3a2-d8f15f6b758a",
+                            Id = "306edac4-6cf0-49b7-aeba-bb285c34b23a",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "840db0c6-3de0-4724-becd-71af48b08946",
+                            Id = "69337def-8128-449d-9a03-b915d9dacab0",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "365ebfd5-abee-43a0-8d33-a86230a88991",
+                            Id = "42578469-9ff3-43fc-b795-10b00f50c68b",
                             Name = "Editor",
                             NormalizedName = "EDITOR"
                         });
