@@ -1,4 +1,9 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Repositories.Extensions;
+using Services;
+using Services.Contracts;
 using StoreApp.Infrastructure.Extensions;
 using Stripe;
 
@@ -16,10 +21,12 @@ builder.Services.ConfigureSession();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureRepositoryRegistration();
 builder.Services.ConfigureServiceRegistration();
-builder.Services.ConfigureApplicationCookie();
+builder.Services.ConfigureApplicationCookie(options => { options.Cookie.SameSite = SameSiteMode.None; });
 
 builder.Services.ConfigureRouting();
-
+builder.Services.AddFluentEmail(builder.Configuration);
+builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
@@ -34,6 +41,7 @@ StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey"
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapIdentityApi<IdentityUser>();
 
 app.UseEndpoints(endpoints =>
 {

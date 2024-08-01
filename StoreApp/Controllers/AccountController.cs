@@ -1,6 +1,9 @@
 ﻿using Entities.Dtos;
+using Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Services;
+using Services.Contracts;
 using StoreApp.Models;
 
 namespace StoreApp.Controllers
@@ -9,21 +12,25 @@ namespace StoreApp.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IEmailService _emailService;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+
+
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailService = emailService;
         }
 
         public IActionResult Login([FromQuery(Name = "ReturnUrl")] string ReturnUrl = "/")
         {
             return View(new LoginModel()
             {
-                ReturnUrl=ReturnUrl
+                ReturnUrl = ReturnUrl
             });
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([FromForm] LoginModel model)
@@ -31,10 +38,10 @@ namespace StoreApp.Controllers
             if (ModelState.IsValid)
             {
                 IdentityUser user = await _userManager.FindByNameAsync(model.Name);
-                if(user is not null)
+                if (user is not null)
                 {
                     await _signInManager.SignOutAsync();
-                    if((await _signInManager.PasswordSignInAsync(user, model.Password,false,false)).Succeeded)
+                    if ((await _signInManager.PasswordSignInAsync(user, model.Password, false, false)).Succeeded)
                     {
                         return Redirect(model?.ReturnUrl ?? "/");
                     }
@@ -44,7 +51,7 @@ namespace StoreApp.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Logout([FromQuery(Name="ReturnUrl")] string ReturnUrl="/")
+        public async Task<IActionResult> Logout([FromQuery(Name = "ReturnUrl")] string ReturnUrl = "/")
         {
             await _signInManager.SignOutAsync();
             return Redirect(ReturnUrl);
@@ -64,14 +71,28 @@ namespace StoreApp.Controllers
                 UserName = model.UserName,
                 Email = model.Email,
             };
-            var result = await _userManager.CreateAsync(user,model.Password);
+            var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
                 var roleResult = await _userManager.AddToRoleAsync(user, "User");
                 if (roleResult.Succeeded)
                 {
-                    return RedirectToAction("Login",new {ReturnUrl="/"});
+                    // Generate the email confirmation token
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var confirmationLink = Url.Action("ConfirmEmail", "Account",
+                        new { userId = user.Id, token = token }, Request.Scheme);
+
+                    // Prepare and send the email
+                    var emailMessage = new EmailMessageModel(
+                        toAddress: user.Email,
+                        subject: "Confirm your email",
+                        body: $"Please click the following link to confirm your email: <a href='{confirmationLink}'>Confirm Email</a>"
+                    );
+
+                    await _emailService.Send(emailMessage);
+
+                    return RedirectToAction("Login", new { ReturnUrl = "/" });
                 }
             }
             else
@@ -80,10 +101,34 @@ namespace StoreApp.Controllers
                 {
                     ModelState.AddModelError("", err.Description);
                 }
-            } return View();
+            }
+            return View();
         }
 
-        public IActionResult AccessDenied([FromQuery(Name ="ReturnUrl")] string returnUrl)
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+            {
+                return BadRequest("User ID and token must be provided.");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return BadRequest("Invalid user.");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                return View("ConfirmEmail");
+            }
+
+            return View("Error");
+        }
+
+        public IActionResult AccessDenied([FromQuery(Name = "ReturnUrl")] string returnUrl)
         {
             return View();
         }

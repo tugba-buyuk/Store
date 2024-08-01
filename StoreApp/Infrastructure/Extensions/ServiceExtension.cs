@@ -8,6 +8,7 @@ using StoreApp.Models;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace StoreApp.Infrastructure.Extensions
 {
@@ -28,14 +29,17 @@ namespace StoreApp.Infrastructure.Extensions
         {
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = false;
+                options.SignIn.RequireConfirmedAccount = true;
                 options.User.RequireUniqueEmail = true;
                 options.Password.RequireLowercase= true;
                 options.Password.RequireUppercase= true;
                 options.Password.RequireDigit= true;
                 options.Password.RequiredLength = 8;
+                options.SignIn.RequireConfirmedEmail = true;
 
-            }).AddEntityFrameworkStores<RepositoryContext>();
+            }).AddDefaultUI()
+                .AddEntityFrameworkStores<RepositoryContext>()
+            .AddDefaultTokenProviders(); ;
         }
 
         public static void ConfigureSession(this IServiceCollection services)
@@ -61,6 +65,7 @@ namespace StoreApp.Infrastructure.Extensions
             services.AddScoped<ICouponCodeRepository,CouponCodeRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
+           
 
         }
 
