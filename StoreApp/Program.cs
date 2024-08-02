@@ -6,9 +6,9 @@ using Services;
 using Services.Contracts;
 using StoreApp.Infrastructure.Extensions;
 using Stripe;
+using System.Net.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
-
 
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
@@ -21,27 +21,23 @@ builder.Services.ConfigureSession();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureRepositoryRegistration();
 builder.Services.ConfigureServiceRegistration();
-builder.Services.ConfigureApplicationCookie(options => { options.Cookie.SameSite = SameSiteMode.None; });
+builder.Services.ConfigureApplicationCookie();
 
 builder.Services.ConfigureRouting();
 builder.Services.AddFluentEmail(builder.Configuration);
-builder.Services.AddTransient<IEmailService, EmailService>();
-builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
 app.UseStaticFiles();
-app.UseSession(); 
 app.UseHttpsRedirection();
-
+app.UseSession();
 app.UseRouting();
 
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapIdentityApi<IdentityUser>();
 
 app.UseEndpoints(endpoints =>
 {
@@ -54,15 +50,11 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
 
     endpoints.MapRazorPages();
-
     endpoints.MapControllers();
 });
-
 
 app.ConfigureAndCheckMigrations();
 app.ConfigureLocalization();
 app.ConfigureDefaultAdminUser();
-app.Run();
 
-//dotnet ef database update gerekiyor eve geçince bi bak.
-//configuration hatasý olabilir debugla
+app.Run();

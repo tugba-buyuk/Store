@@ -12,15 +12,15 @@ namespace StoreApp.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly IEmailService _emailService;
+        private readonly IServiceManager _manager;
+        private readonly ILogger<AccountController> _logger;
 
-
-
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IEmailService emailService)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IServiceManager manager, ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _emailService = emailService;
+            _manager = manager;
+            _logger = logger;
         }
 
         public IActionResult Login([FromQuery(Name = "ReturnUrl")] string ReturnUrl = "/")
@@ -35,21 +35,55 @@ namespace StoreApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([FromForm] LoginModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                IdentityUser user = await _userManager.FindByNameAsync(model.Name);
-                if (user is not null)
+                return View(model);
+            }
+
+            try
+            {
+                // Kullanıcıyı bul
+                var user = await _userManager.FindByNameAsync(model.Name);
+
+                // Kullanıcı varsa, giriş yapmayı dene
+                if (user != null)
                 {
+                    // Önce çıkış yap
                     await _signInManager.SignOutAsync();
-                    if ((await _signInManager.PasswordSignInAsync(user, model.Password, false, false)).Succeeded)
+
+                    // Kullanıcı adı ve şifre ile giriş yap
+                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, lockoutOnFailure: false);
+
+                    if (result.Succeeded)
                     {
-                        return Redirect(model?.ReturnUrl ?? "/");
+                        // Başarılı giriş, ReturnUrl'e yönlendir
+                        _logger.LogInformation("Login successful. Redirecting to: {ReturnUrl}", model.ReturnUrl);
+                        return Redirect(model.ReturnUrl ?? "/");
+
+                    }
+                    else
+                    {
+                        // Geçersiz giriş denemesi
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     }
                 }
-                ModelState.AddModelError("Error", "Invalid username or password");
+                else
+                {
+                    // Kullanıcı bulunamadıysa hata mesajı ekle
+                    ModelState.AddModelError(string.Empty, "Invalid username or password.");
+                }
             }
-            return View();
+            catch (Exception ex)
+            {
+                // Log the exception and add a generic error message
+                _logger.LogError(ex, "An error occurred while processing the login.");
+                ModelState.AddModelError(string.Empty, "An error occurred while processing your request.");
+            }
+
+            // Modeli yeniden görüntüle
+            return View(model);
         }
+
 
         public async Task<IActionResult> Logout([FromQuery(Name = "ReturnUrl")] string ReturnUrl = "/")
         {
@@ -87,10 +121,10 @@ namespace StoreApp.Controllers
                     var emailMessage = new EmailMessageModel(
                         toAddress: user.Email,
                         subject: "Confirm your email",
-                        body: $"Please click the following link to confirm your email: <a href='{confirmationLink}'>Confirm Email</a>"
+                        body: $"Please click the following link to confirm your email: <a href={confirmationLink}>Confirm Email</a>"
                     );
 
-                    await _emailService.Send(emailMessage);
+                    await _manager.EmailService.Send(emailMessage);
 
                     return RedirectToAction("Login", new { ReturnUrl = "/" });
                 }

@@ -11,7 +11,7 @@ using Repositories;
 namespace StoreApp.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20240731235806_init")]
+    [Migration("20240802220002_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -1006,19 +1006,19 @@ namespace StoreApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "4b5a540e-569b-4b93-91b3-0d743ca5f978",
+                            Id = "e97ebf79-4728-4864-96bd-e46808ca4023",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "100b6e24-664e-40ce-a9d0-f9fa0c81f3f6",
+                            Id = "087ae2ad-049e-4698-83f1-d8ce54833f31",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "981baa7f-c563-4d1a-b63e-a627069320bc",
+                            Id = "69cb97cf-9883-4737-99ee-95f338bd97c9",
                             Name = "Editor",
                             NormalizedName = "EDITOR"
                         });

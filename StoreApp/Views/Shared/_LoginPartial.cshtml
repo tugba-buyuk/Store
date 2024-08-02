@@ -1,0 +1,20 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<nav>
+    <ul>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <li>Hello, @UserManager.GetUserName(User)</li>
+            <li><a href="/Identity/Account/Logout">Logout</a></li>
+        }
+        else
+        {
+            <li><a href="/Identity/Account/Login">Login</a></li>
+            <li><a href="/Identity/Account/Register">Register</a></li>
+        }
+    </ul>
+</nav>

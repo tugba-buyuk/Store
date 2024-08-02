@@ -80,6 +80,8 @@ namespace StoreApp.Infrastructure.Extensions
             services.AddScoped<ICouponCodeService, CouponCodeManager>();
             services.AddScoped<ICityService, CityManager>();
             services.AddScoped<ICountryService , CountryManager>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddTransient<IEmailSender, EmailSender>();
         }
         public static void ConfigureRouting(this IServiceCollection services)
         {
@@ -94,7 +96,7 @@ namespace StoreApp.Infrastructure.Extensions
         {
             services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = new PathString("/Sccount/Login");
+                options.LoginPath = new PathString("/Account/Login");
                 options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
                 options.AccessDeniedPath = new PathString("/Account/AccessDenied");
