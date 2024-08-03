@@ -19,6 +19,7 @@ builder.Services.AddRazorPages();
 builder.Services.ConfigureDbContext(builder.Configuration);
 builder.Services.ConfigureSession();
 builder.Services.ConfigureIdentity();
+builder.Services.ConfigureServices();
 builder.Services.ConfigureRepositoryRegistration();
 builder.Services.ConfigureServiceRegistration();
 builder.Services.ConfigureApplicationCookie();

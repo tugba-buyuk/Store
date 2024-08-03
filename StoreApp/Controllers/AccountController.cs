@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Services;
 using Services.Contracts;
 using StoreApp.Models;
+using System.Security.Claims;
 
 namespace StoreApp.Controllers
 {
@@ -165,6 +166,73 @@ namespace StoreApp.Controllers
         public IActionResult AccessDenied([FromQuery(Name = "ReturnUrl")] string returnUrl)
         {
             return View();
+        }
+
+        public IActionResult GoogleLogin(string returnUrl)
+        {
+            string RedirectUrl = Url.Action("ExternalResponse", "Account", new { returnUrl = returnUrl });
+
+            var properties =_signInManager.ConfigureExternalAuthenticationProperties("Google",RedirectUrl);
+            return new ChallengeResult("Google",properties);
+        }
+
+        public async Task<IActionResult> ExternalResponse(string returnUrl = "/")
+        {
+            ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
+
+            if(info == null)
+            {
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,info.ProviderKey,false);
+
+                if (result.Succeeded)
+                {
+                    return Redirect(returnUrl);
+                }
+                else
+                {
+                    IdentityUser user = new IdentityUser();
+                    user.Email=info.Principal.FindFirst(ClaimTypes.Email).Value;
+                    string externaluserId = info.Principal.FindFirst(ClaimTypes.NameIdentifier).Value;
+                    if(info.Principal.HasClaim(x=>x.Type == ClaimTypes.Name))
+                    {
+                        string userName = info.Principal.FindFirst(ClaimTypes.Name).Value;
+                        userName = userName.Replace(' ', '-').ToLower() + externaluserId.Substring(0, 5).ToString();
+                        user.UserName= userName;
+                    }
+                    IdentityResult createResult= await _userManager.CreateAsync(user);
+                    var resultt = await _userManager.AddToRoleAsync(user, "User");
+                    
+                    if(createResult.Succeeded)
+                    {
+                        IdentityResult loginResult = await _userManager.AddLoginAsync(user, info);
+                        if (loginResult.Succeeded)
+                        {
+                            await _signInManager.SignInAsync(user, true);
+                            return Redirect(returnUrl);
+                        }
+                        else
+                        {
+                            foreach(var item in loginResult.Errors)
+                            {
+                                ModelState.AddModelError("", item.Description);
+                            }                        
+                        }
+                    }
+                    else
+                    {
+                        foreach(var item in createResult.Errors)
+                        {
+                            ModelState.AddModelError("", item.Description);
+                        }
+                    }
+                    
+                }
+            }
+            return NotFound();
         }
     }
 }

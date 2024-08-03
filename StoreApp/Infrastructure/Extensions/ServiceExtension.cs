@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace StoreApp.Infrastructure.Extensions
 {
@@ -27,6 +28,7 @@ namespace StoreApp.Infrastructure.Extensions
 
         public static void ConfigureIdentity(this IServiceCollection services)
         {
+
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
@@ -101,6 +103,16 @@ namespace StoreApp.Infrastructure.Extensions
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
                 options.AccessDeniedPath = new PathString("/Account/AccessDenied");
             });
+        }
+        public static  void ConfigureServices(this IServiceCollection services)
+        {
+            services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = "***REMOVED***";
+                options.ClientSecret = "***REMOVED***";
+
+            });
+
         }
     }
 }
