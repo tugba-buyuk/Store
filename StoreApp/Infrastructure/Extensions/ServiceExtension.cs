@@ -119,6 +119,11 @@ namespace StoreApp.Infrastructure.Extensions
                 options.ClientId = googleAuthNSection["ClientId"];
                 options.ClientSecret = googleAuthNSection["ClientSecret"];
             });
+            services.AddAuthentication().AddFacebook(x =>
+            {
+                x.AppId = configuration["FacebookAppId"];
+                x.AppSecret = configuration["FacebookAppSecret"];
+            });
         }
     }
 }

@@ -181,8 +181,6 @@ namespace StoreApp.Controllers
 
         }
 
-
-
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> ExternalResponse(string returnUrl = "/")
@@ -266,8 +264,96 @@ namespace StoreApp.Controllers
             return View();
         }
 
+        public IActionResult FacebookLogin(string returnUrl)
+        {
+            string RedirectUrl = Url.Action("FacebookResponse", "Account", new { returnUrl = returnUrl });
 
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Facebook", RedirectUrl);
+            return new ChallengeResult("Facebook", properties);
 
+        }
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> FacebookResponse(string returnUrl = "/")
+        {
+            try
+            {
+                ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
+
+                if (info == null)
+                {
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+
+                    if (result.Succeeded)
+                    {
+                        return Redirect(returnUrl);
+                    }
+                    else
+                    {
+                        var user = new IdentityUser
+                        {
+                            Email = info.Principal.FindFirst(ClaimTypes.Email)?.Value,
+                            UserName = (info.Principal.HasClaim(x => x.Type == ClaimTypes.Name)
+                                ? info.Principal.FindFirst(ClaimTypes.Name)?.Value
+                                    .Replace(' ', '-')
+                                    .RemoveTurkishCharacters()
+                                    .ToLower()
+                                    + info.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value.Substring(0, 5)
+                                : info.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value.Substring(0, 5))
+                                .RemoveTurkishCharacters(),
+                            EmailConfirmed = true
+                        };
+
+                        var createResult = await _userManager.CreateAsync(user);
+                        if (createResult.Succeeded)
+                        {
+                            var addToRoleResult = await _userManager.AddToRoleAsync(user, "User");
+                            if (addToRoleResult.Succeeded)
+                            {
+                                var loginResult = await _userManager.AddLoginAsync(user, info);
+                                if (loginResult.Succeeded)
+                                {
+                                    await _signInManager.SignInAsync(user, true);
+                                    return Redirect(returnUrl);
+                                }
+                                else
+                                {
+                                    foreach (var error in loginResult.Errors)
+                                    {
+                                        ModelState.AddModelError("", error.Description);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                foreach (var error in addToRoleResult.Errors)
+                                {
+                                    ModelState.AddModelError("", error.Description);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            foreach (var error in createResult.Errors)
+                            {
+                                ModelState.AddModelError("", error.Description);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
+
+            return View();
+        }
 
     }
 }
