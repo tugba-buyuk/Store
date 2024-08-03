@@ -1,9 +1,13 @@
 ﻿using Entities.Dtos;
 using Entities.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using Services.Contracts;
+using StoreApp.Infrastructure.Extensions;
 using StoreApp.Models;
 using System.Security.Claims;
 
@@ -172,67 +176,98 @@ namespace StoreApp.Controllers
         {
             string RedirectUrl = Url.Action("ExternalResponse", "Account", new { returnUrl = returnUrl });
 
-            var properties =_signInManager.ConfigureExternalAuthenticationProperties("Google",RedirectUrl);
-            return new ChallengeResult("Google",properties);
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", RedirectUrl);
+            return new ChallengeResult("Google", properties);
+
         }
 
+
+
+        [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> ExternalResponse(string returnUrl = "/")
         {
-            ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
-
-            if(info == null)
+            try
             {
-                return RedirectToAction("Login");
-            }
-            else
-            {
-                Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,info.ProviderKey,false);
+                ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
 
-                if (result.Succeeded)
+                if (info == null)
                 {
-                    return Redirect(returnUrl);
+                    return RedirectToAction("Login");
                 }
                 else
                 {
-                    IdentityUser user = new IdentityUser();
-                    user.Email=info.Principal.FindFirst(ClaimTypes.Email).Value;
-                    string externaluserId = info.Principal.FindFirst(ClaimTypes.NameIdentifier).Value;
-                    if(info.Principal.HasClaim(x=>x.Type == ClaimTypes.Name))
+                    var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+
+                    if (result.Succeeded)
                     {
-                        string userName = info.Principal.FindFirst(ClaimTypes.Name).Value;
-                        userName = userName.Replace(' ', '-').ToLower() + externaluserId.Substring(0, 5).ToString();
-                        user.UserName= userName;
-                    }
-                    IdentityResult createResult= await _userManager.CreateAsync(user);
-                    var resultt = await _userManager.AddToRoleAsync(user, "User");
-                    
-                    if(createResult.Succeeded)
-                    {
-                        IdentityResult loginResult = await _userManager.AddLoginAsync(user, info);
-                        if (loginResult.Succeeded)
-                        {
-                            await _signInManager.SignInAsync(user, true);
-                            return Redirect(returnUrl);
-                        }
-                        else
-                        {
-                            foreach(var item in loginResult.Errors)
-                            {
-                                ModelState.AddModelError("", item.Description);
-                            }                        
-                        }
+                        return Redirect(returnUrl);
                     }
                     else
                     {
-                        foreach(var item in createResult.Errors)
+                        var user = new IdentityUser
                         {
-                            ModelState.AddModelError("", item.Description);
+                            Email = info.Principal.FindFirst(ClaimTypes.Email)?.Value,
+                            UserName = (info.Principal.HasClaim(x => x.Type == ClaimTypes.Name)
+                                ? info.Principal.FindFirst(ClaimTypes.Name)?.Value
+                                    .Replace(' ', '-')
+                                    .RemoveTurkishCharacters()
+                                    .ToLower()
+                                    + info.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value.Substring(0, 5)
+                                : info.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value.Substring(0, 5))
+                                .RemoveTurkishCharacters(),
+                            EmailConfirmed = true
+                        };
+
+                        var createResult = await _userManager.CreateAsync(user);
+                        if (createResult.Succeeded)
+                        {
+                            var addToRoleResult = await _userManager.AddToRoleAsync(user, "User");
+                            if (addToRoleResult.Succeeded)
+                            {
+                                var loginResult = await _userManager.AddLoginAsync(user, info);
+                                if (loginResult.Succeeded)
+                                {
+                                    await _signInManager.SignInAsync(user, true);
+                                    return Redirect(returnUrl);
+                                }
+                                else
+                                {
+                                    foreach (var error in loginResult.Errors)
+                                    {
+                                        ModelState.AddModelError("", error.Description);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                foreach (var error in addToRoleResult.Errors)
+                                {
+                                    ModelState.AddModelError("", error.Description);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            foreach (var error in createResult.Errors)
+                            {
+                                ModelState.AddModelError("", error.Description);
+                            }
                         }
                     }
-                    
                 }
             }
-            return NotFound();
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
+
+            return View();
         }
+
+
+
+
     }
 }

@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +11,7 @@ using Stripe;
 using System.Net.Mail;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.ConfigureAuthentication(builder.Configuration);
 
 builder.Services.AddControllers()
     .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
@@ -27,26 +30,16 @@ builder.Services.ConfigureRouting();
 builder.Services.AddFluentEmail(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultScheme = IdentityConstants.ApplicationScheme;
-    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
-})
-.AddGoogle(options =>
-{
-    options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-    options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-});
-
 var app = builder.Build();
-
-app.UseStaticFiles();
-app.UseHttpsRedirection();
-app.UseSession();
-app.UseRouting();
 
 StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
+app.UseStaticFiles();
+app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -58,7 +51,10 @@ app.UseEndpoints(endpoints =>
         pattern: "Admin/{controller=Dashboard}/{action=Index}/{id?}"
     );
 
-    endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}"
+    );
 
     endpoints.MapRazorPages();
     endpoints.MapControllers();
