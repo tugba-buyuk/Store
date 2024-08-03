@@ -104,14 +104,5 @@ namespace StoreApp.Infrastructure.Extensions
                 options.AccessDeniedPath = new PathString("/Account/AccessDenied");
             });
         }
-        public static void ConfigureServices(this IServiceCollection services)
-        {
-            services.AddAuthentication().AddGoogle(options =>
-            {
-                
-
-            });
-
-        }
     }
 }
