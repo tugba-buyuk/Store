@@ -108,8 +108,8 @@ namespace StoreApp.Infrastructure.Extensions
         {
             services.AddAuthentication().AddGoogle(options =>
             {
-                //options.ClientId = "***REMOVED***";
-                //options.ClientSecret = "***REMOVED***";
+                options.ClientId = "***REMOVED***";
+                options.ClientSecret = "***REMOVED***";
 
             });
 
