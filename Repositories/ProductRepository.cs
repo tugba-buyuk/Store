@@ -46,6 +46,11 @@ namespace Repositories
                                     
         }
 
+        public IQueryable<Product> ProductsWithSearch(string searchTerm)
+        {
+           return _context.Products.FilteredBySearchTerm(searchTerm);
+        }
+
         //public void RemoveProductColors(int productId)
         //{
         //    var productColorsToDelete = _context.ProductColors.Where(pc => pc.ProductId == productId).ToList();

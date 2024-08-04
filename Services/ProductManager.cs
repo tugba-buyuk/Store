@@ -3,6 +3,7 @@ using Entities.Dtos;
 using Entities.Models;
 using Entities.RequestParameters;
 using Microsoft.EntityFrameworkCore;
+using Repositories;
 using Repositories.Contracts;
 using Services.Contracts;
 using System;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.Extensions.Logging.EventSource.LoggingEventSource;
 
 namespace Services
 {
@@ -74,6 +76,11 @@ namespace Services
             productDto.Images = product.Images;
             return productDto;
 
+        }
+
+        public IEnumerable<Product> GetProductsWithSearch(string searchTerm)
+        {
+            return _manager.Product.ProductsWithSearch(searchTerm);
         }
 
         public IEnumerable<Product> GetShowCaseProducts(bool trackChanges)

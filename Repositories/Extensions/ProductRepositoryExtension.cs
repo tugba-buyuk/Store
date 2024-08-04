@@ -21,18 +21,23 @@ namespace Repositories.Extensions
             }
         }
 
-        public static IQueryable<Product> FilteredBySearchTerm(this IQueryable<Product> products,
-            String? searchTerm)
+        public static IQueryable<Product> FilteredBySearchTerm(this IQueryable<Product> products, string? searchTerm)
         {
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
                 return products;
             }
-            else
-            {
-                return products.Where(prd=>prd.ProductName.ToLower()
-                .Contains(searchTerm.ToLower()));
-            }
+
+            var keywords = searchTerm.Trim().ToLower().Split(' ');
+
+            return products.Where(prd =>
+                keywords.Any(keyword =>
+                    prd.ProductName.ToLower().Contains(keyword) ||
+                    prd.Summary.ToLower().Contains(keyword) ||
+                    prd.Gender.ToLower().Contains(keyword) ||
+                    prd.ColorNames.Any(color => color.ToLower().Contains(keyword))
+                )
+            );
         }
         public static IQueryable<Product>FilteredByPrice(this IQueryable<Product> products,
             int minPrice, int maxPrice, bool isValidPrice)
