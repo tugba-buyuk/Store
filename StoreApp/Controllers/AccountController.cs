@@ -28,11 +28,12 @@ namespace StoreApp.Controllers
             _logger = logger;
         }
 
-        public IActionResult Login([FromQuery(Name = "ReturnUrl")] string ReturnUrl = "/")
+        public async Task<IActionResult> Login([FromQuery(Name = "ReturnUrl")] string ReturnUrl = "/")
         {
             return View(new LoginModel()
             {
-                ReturnUrl = ReturnUrl
+                ReturnUrl = ReturnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
             });
         }
 
@@ -172,188 +173,93 @@ namespace StoreApp.Controllers
             return View();
         }
 
-        public IActionResult GoogleLogin(string returnUrl)
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult ExternalLogin(string provider, string returnUrl)
         {
-            string RedirectUrl = Url.Action("ExternalResponse", "Account", new { returnUrl = returnUrl });
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account",
+                                    new { ReturnUrl = returnUrl });
 
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", RedirectUrl);
-            return new ChallengeResult("Google", properties);
+            var properties =
+                _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
 
+            return new ChallengeResult(provider, properties);
         }
 
-        [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ExternalResponse(string returnUrl = "/")
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
         {
-            try
+            returnUrl = returnUrl ?? Url.Content("~/");
+
+            LoginModel loginViewModel = new LoginModel
             {
-                ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
 
-                if (info == null)
-                {
-                    return RedirectToAction("Login");
-                }
-                else
-                {
-                    var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+            if (remoteError != null)
+            {
+                ModelState
+                    .AddModelError(string.Empty, $"Error from external provider: {remoteError}");
 
-                    if (result.Succeeded)
+                return View("Login", loginViewModel);
+            }
+
+            // Get the login information about the user from the external login provider
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                ModelState.AddModelError(string.Empty, "Error loading external login information.");
+
+                return View("Login", loginViewModel);
+            }
+
+            // If the user already has a login (i.e if there is a record in AspNetUserLogins
+            // table) then sign-in the user with this external login provider
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
+                info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
+            if (signInResult.Succeeded)
+            {
+                return LocalRedirect(returnUrl);
+            }
+            // If there is no record in AspNetUserLogins table, the user may not have
+            // a local account
+            else
+            {
+                // Get the email claim value
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+
+                if (email != null)
+                {
+                    // Create a new user without password if we do not have a user already
+                    var user = await _userManager.FindByEmailAsync(email);
+
+                    if (user == null)
                     {
-                        return Redirect(returnUrl);
-                    }
-                    else
-                    {
-                        var user = new IdentityUser
+                        user = new IdentityUser
                         {
-                            Email = info.Principal.FindFirst(ClaimTypes.Email)?.Value,
-                            UserName = (info.Principal.HasClaim(x => x.Type == ClaimTypes.Name)
-                                ? info.Principal.FindFirst(ClaimTypes.Name)?.Value
-                                    .Replace(' ', '-')
-                                    .RemoveTurkishCharacters()
-                                    .ToLower()
-                                    + info.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value.Substring(0, 5)
-                                : info.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value.Substring(0, 5))
-                                .RemoveTurkishCharacters(),
-                            EmailConfirmed = true
+                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            EmailConfirmed=true
                         };
 
-                        var createResult = await _userManager.CreateAsync(user);
-                        if (createResult.Succeeded)
-                        {
-                            var addToRoleResult = await _userManager.AddToRoleAsync(user, "User");
-                            if (addToRoleResult.Succeeded)
-                            {
-                                var loginResult = await _userManager.AddLoginAsync(user, info);
-                                if (loginResult.Succeeded)
-                                {
-                                    await _signInManager.SignInAsync(user, true);
-                                    return Redirect(returnUrl);
-                                }
-                                else
-                                {
-                                    foreach (var error in loginResult.Errors)
-                                    {
-                                        ModelState.AddModelError("", error.Description);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                foreach (var error in addToRoleResult.Errors)
-                                {
-                                    ModelState.AddModelError("", error.Description);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            foreach (var error in createResult.Errors)
-                            {
-                                ModelState.AddModelError("", error.Description);
-                            }
-                        }
+                        await _userManager.CreateAsync(user);
                     }
+
+                    // Add a login (i.e insert a row for the user in AspNetUserLogins table)
+                    await _userManager.AddLoginAsync(user, info);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return LocalRedirect(returnUrl);
                 }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-            }
 
-            return View();
+                // If we cannot find the user email we cannot continue
+                ViewBag.ErrorTitle = $"Email claim not received from: {info.LoginProvider}";
+                ViewBag.ErrorMessage = "Please contact support on Pragim@PragimTech.com";
+
+                return View("Error");
+            }
         }
-
-        public IActionResult FacebookLogin(string returnUrl)
-        {
-            string RedirectUrl = Url.Action("FacebookResponse", "Account", new { returnUrl = returnUrl });
-
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Facebook", RedirectUrl);
-            return new ChallengeResult("Facebook", properties);
-
-        }
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<IActionResult> FacebookResponse(string returnUrl = "/")
-        {
-            try
-            {
-                ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
-
-                if (info == null)
-                {
-                    return RedirectToAction("Login");
-                }
-                else
-                {
-                    var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
-
-                    if (result.Succeeded)
-                    {
-                        return Redirect(returnUrl);
-                    }
-                    else
-                    {
-                        var user = new IdentityUser
-                        {
-                            Email = info.Principal.FindFirst(ClaimTypes.Email)?.Value,
-                            UserName = (info.Principal.HasClaim(x => x.Type == ClaimTypes.Name)
-                                ? info.Principal.FindFirst(ClaimTypes.Name)?.Value
-                                    .Replace(' ', '-')
-                                    .RemoveTurkishCharacters()
-                                    .ToLower()
-                                    + info.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value.Substring(0, 5)
-                                : info.Principal.FindFirst(ClaimTypes.NameIdentifier)?.Value.Substring(0, 5))
-                                .RemoveTurkishCharacters(),
-                            EmailConfirmed = true
-                        };
-
-                        var createResult = await _userManager.CreateAsync(user);
-                        if (createResult.Succeeded)
-                        {
-                            var addToRoleResult = await _userManager.AddToRoleAsync(user, "User");
-                            if (addToRoleResult.Succeeded)
-                            {
-                                var loginResult = await _userManager.AddLoginAsync(user, info);
-                                if (loginResult.Succeeded)
-                                {
-                                    await _signInManager.SignInAsync(user, true);
-                                    return Redirect(returnUrl);
-                                }
-                                else
-                                {
-                                    foreach (var error in loginResult.Errors)
-                                    {
-                                        ModelState.AddModelError("", error.Description);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                foreach (var error in addToRoleResult.Errors)
-                                {
-                                    ModelState.AddModelError("", error.Description);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            foreach (var error in createResult.Errors)
-                            {
-                                ModelState.AddModelError("", error.Description);
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
-            }
-
-            return View();
-        }
-
     }
 }
