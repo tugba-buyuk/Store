@@ -1,0 +1,27 @@
+﻿@model Order
+
+@{
+    ViewData["Title"] = "Payment Success";
+}
+
+<h2>Payment Successfully Completed</h2>
+
+<p>Thank you! Your payment has been successfully received.</p>
+
+@if (Model != null)
+{
+    <h3>Order Details:</h3>
+    <ul>
+        <li><strong>Order ID:</strong> @Model.OrderId</li>
+        <li><strong>Total Amount:</strong> $@Model.TotalPrice</li>
+        <li><strong>Items:</strong></li>
+        <ul>
+            @foreach (var item in Model.Lines)
+            {
+                <li>@item.Product.ProductName - Quantity: @item.Quantity - Price: $@item.Product.Price</li>
+            }
+        </ul>
+    </ul>
+}
+
+<p>If you encounter any issues with your payment, please contact us.</p>
