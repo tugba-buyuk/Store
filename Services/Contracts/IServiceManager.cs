@@ -16,6 +16,8 @@ namespace Services.Contracts
         ICouponCodeService CouponCodeService { get; }
         ICountryService CountryService { get; }
         ICityService CityService { get; }
+        IEmailService EmailService { get; }
+        ISMSService SMSService { get; }
         
     }
 }

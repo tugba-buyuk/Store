@@ -1,10 +1,15 @@
 ﻿using Entities.Dtos;
 using Entities.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Services;
 using Services.Contracts;
+using StoreApp.Infrastructure.Extensions;
 using StoreApp.Models;
+using System.Security.Claims;
 
 namespace StoreApp.Controllers
 {
@@ -12,22 +17,23 @@ namespace StoreApp.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly IEmailService _emailService;
+        private readonly IServiceManager _manager;
+        private readonly ILogger<AccountController> _logger;
 
-
-
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IEmailService emailService)
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IServiceManager manager, ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _emailService = emailService;
+            _manager = manager;
+            _logger = logger;
         }
 
-        public IActionResult Login([FromQuery(Name = "ReturnUrl")] string ReturnUrl = "/")
+        public async Task<IActionResult> Login([FromQuery(Name = "ReturnUrl")] string ReturnUrl = "/")
         {
             return View(new LoginModel()
             {
-                ReturnUrl = ReturnUrl
+                ReturnUrl = ReturnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
             });
         }
 
@@ -35,21 +41,55 @@ namespace StoreApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([FromForm] LoginModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                IdentityUser user = await _userManager.FindByNameAsync(model.Name);
-                if (user is not null)
+                return View(model);
+            }
+
+            try
+            {
+                // Kullanıcıyı bul
+                var user = await _userManager.FindByNameAsync(model.Name);
+
+                // Kullanıcı varsa, giriş yapmayı dene
+                if (user != null)
                 {
+                    // Önce çıkış yap
                     await _signInManager.SignOutAsync();
-                    if ((await _signInManager.PasswordSignInAsync(user, model.Password, false, false)).Succeeded)
+
+                    // Kullanıcı adı ve şifre ile giriş yap
+                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, lockoutOnFailure: false);
+
+                    if (result.Succeeded)
                     {
-                        return Redirect(model?.ReturnUrl ?? "/");
+                        // Başarılı giriş, ReturnUrl'e yönlendir
+                        _logger.LogInformation("Login successful. Redirecting to: {ReturnUrl}", model.ReturnUrl);
+                        return Redirect(model.ReturnUrl ?? "/");
+
+                    }
+                    else
+                    {
+                        // Geçersiz giriş denemesi
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     }
                 }
-                ModelState.AddModelError("Error", "Invalid username or password");
+                else
+                {
+                    // Kullanıcı bulunamadıysa hata mesajı ekle
+                    ModelState.AddModelError(string.Empty, "Invalid username or password.");
+                }
             }
-            return View();
+            catch (Exception ex)
+            {
+                // Log the exception and add a generic error message
+                _logger.LogError(ex, "An error occurred while processing the login.");
+                ModelState.AddModelError(string.Empty, "An error occurred while processing your request.");
+            }
+
+            // Modeli yeniden görüntüle
+            return View(model);
         }
+
 
         public async Task<IActionResult> Logout([FromQuery(Name = "ReturnUrl")] string ReturnUrl = "/")
         {
@@ -70,6 +110,7 @@ namespace StoreApp.Controllers
             {
                 UserName = model.UserName,
                 Email = model.Email,
+                PhoneNumber = model.PhoneNumber
             };
             var result = await _userManager.CreateAsync(user, model.Password);
 
@@ -87,11 +128,11 @@ namespace StoreApp.Controllers
                     var emailMessage = new EmailMessageModel(
                         toAddress: user.Email,
                         subject: "Confirm your email",
-                        body: $"Please click the following link to confirm your email: <a href='{confirmationLink}'>Confirm Email</a>"
+                        body: $"Please click the following link to confirm your email: <a href={confirmationLink}>Confirm Email</a>"
                     );
-
-                    await _emailService.Send(emailMessage);
-
+                    var message = $"Your registration on our website has been completed with the username {user.UserName} and email address {user.Email}. Please confirm your account by verifying the email sent to you in order to start using your account.";
+                    await _manager.EmailService.Send(emailMessage);
+                    _manager.SMSService.SendSms(user.PhoneNumber,message);
                     return RedirectToAction("Login", new { ReturnUrl = "/" });
                 }
             }
@@ -131,6 +172,95 @@ namespace StoreApp.Controllers
         public IActionResult AccessDenied([FromQuery(Name = "ReturnUrl")] string returnUrl)
         {
             return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult ExternalLogin(string provider, string returnUrl)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account",
+                                    new { ReturnUrl = returnUrl });
+
+            var properties =
+                _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+
+            return new ChallengeResult(provider, properties);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+
+            LoginModel loginViewModel = new LoginModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+
+            if (remoteError != null)
+            {
+                ModelState
+                    .AddModelError(string.Empty, $"Error from external provider: {remoteError}");
+
+                return View("Login", loginViewModel);
+            }
+
+            // Get the login information about the user from the external login provider
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                ModelState.AddModelError(string.Empty, "Error loading external login information.");
+
+                return View("Login", loginViewModel);
+            }
+
+            // If the user already has a login (i.e if there is a record in AspNetUserLogins
+            // table) then sign-in the user with this external login provider
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider,
+                info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
+            if (signInResult.Succeeded)
+            {
+                return LocalRedirect(returnUrl);
+            }
+            // If there is no record in AspNetUserLogins table, the user may not have
+            // a local account
+            else
+            {
+                // Get the email claim value
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+
+                if (email != null)
+                {
+                    // Create a new user without password if we do not have a user already
+                    var user = await _userManager.FindByEmailAsync(email);
+
+                    if (user == null)
+                    {
+                        user = new IdentityUser
+                        {
+                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            EmailConfirmed=true
+                        };
+
+                        await _userManager.CreateAsync(user);
+                    }
+
+                    // Add a login (i.e insert a row for the user in AspNetUserLogins table)
+                    await _userManager.AddLoginAsync(user, info);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    return LocalRedirect(returnUrl);
+                }
+
+                // If we cannot find the user email we cannot continue
+                ViewBag.ErrorTitle = $"Email claim not received from: {info.LoginProvider}";
+                ViewBag.ErrorMessage = "Please contact support on Pragim@PragimTech.com";
+
+                return View("Error");
+            }
         }
     }
 }

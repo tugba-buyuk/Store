@@ -19,6 +19,11 @@ public class Product
     public string? Gender { get; set; } = string.Empty;
     public List<PrdImage> Images { get; set; } = new List<PrdImage>(); // Resim koleksiyonu
     public List<string> ImageUrls { get; set; } = new List<string>();
+
+    public object ToList()
+    {
+        throw new NotImplementedException();
+    }
 }
     
 

@@ -1,4 +1,5 @@
-﻿using Entities.RequestParameters;
+﻿using Entities.Models;
+using Entities.RequestParameters;
 using Microsoft.AspNetCore.Mvc;
 using Repositories;
 using Repositories.Contracts;
@@ -39,6 +40,26 @@ namespace StoreApp.Controllers
             var model= _manager.ProductService.GetOneProduct(id, false);
             return View(model);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult SearchingBar([FromForm] string searchTerm, ProductRequestParameters p)
+        {
+            var products=_manager.ProductService.GetProductsWithSearch(searchTerm);
+            var pagination = new Pagination()
+            {
+                CurrentPage = p.PageNumber,
+                ItemsPerPage = p.PageSize,
+                TotalItems = products.Count()
+
+            };
+            return View(new ProductListViewModel()
+            {
+                Pagination = pagination,
+                Products = products
+            });
+        }
+
 
     }
 }

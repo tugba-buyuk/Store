@@ -9,12 +9,13 @@ using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Authentication.Google;
 
 namespace StoreApp.Infrastructure.Extensions
 {
     public static class ServiceExtension
     {
-        public static void ConfigureDbContext(this IServiceCollection  services, 
+        public static void ConfigureDbContext(this IServiceCollection services,
         IConfiguration configuration)
         {
             services.AddDbContext<RepositoryContext>(options =>
@@ -27,13 +28,14 @@ namespace StoreApp.Infrastructure.Extensions
 
         public static void ConfigureIdentity(this IServiceCollection services)
         {
+
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = true;
                 options.User.RequireUniqueEmail = true;
-                options.Password.RequireLowercase= true;
-                options.Password.RequireUppercase= true;
-                options.Password.RequireDigit= true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 8;
                 options.SignIn.RequireConfirmedEmail = true;
 
@@ -62,10 +64,10 @@ namespace StoreApp.Infrastructure.Extensions
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IColorRepository, ColorRepository>();
-            services.AddScoped<ICouponCodeRepository,CouponCodeRepository>();
+            services.AddScoped<ICouponCodeRepository, CouponCodeRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
-           
+
 
         }
 
@@ -79,7 +81,10 @@ namespace StoreApp.Infrastructure.Extensions
             services.AddScoped<IColorService, ColorManager>();
             services.AddScoped<ICouponCodeService, CouponCodeManager>();
             services.AddScoped<ICityService, CityManager>();
-            services.AddScoped<ICountryService , CountryManager>();
+            services.AddScoped<ICountryService, CountryManager>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddScoped<ISMSService, SMSManager>();
         }
         public static void ConfigureRouting(this IServiceCollection services)
         {
@@ -94,10 +99,31 @@ namespace StoreApp.Infrastructure.Extensions
         {
             services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = new PathString("/Sccount/Login");
+                options.LoginPath = new PathString("/Account/Login");
                 options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
                 options.AccessDeniedPath = new PathString("/Account/AccessDenied");
+            });
+        }
+
+        public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddGoogle(options =>
+            {
+                IConfigurationSection googleAuthNSection = configuration.GetSection("Authentication:Google");
+                options.ClientId = googleAuthNSection["ClientId"];
+                options.ClientSecret = googleAuthNSection["ClientSecret"];
+            });
+            services.AddAuthentication().AddFacebook(x =>
+            {
+                x.AppId = configuration["FacebookAppId"];
+                x.AppSecret = configuration["FacebookAppSecret"];
             });
         }
     }

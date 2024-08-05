@@ -16,6 +16,9 @@ namespace Entities.Dtos
         public String? Email { get; init; }
 
         [Required(ErrorMessage = "Password is required")]
-        public String? Password { get; init; }   
+        public String? Password { get; init; }
+
+        [Required(ErrorMessage = "PhoneNumber is required")]
+        public String? PhoneNumber { get; init; }
     }
 }

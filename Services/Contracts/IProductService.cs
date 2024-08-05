@@ -20,5 +20,6 @@ namespace Services.Contracts
         Product? GetOneProduct(int id, bool trackChanges);
         ProductDtoForUpdate GetOneProductForUpdate(int id, bool trackChanges);
         void UpdateOneProduct(ProductDtoForUpdate productDto);
+        IEnumerable<Product> GetProductsWithSearch(string searchTerm);
     }
 }

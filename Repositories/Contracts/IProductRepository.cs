@@ -12,11 +12,13 @@ namespace Repositories.Contracts
     {
         IQueryable<Product> GetAllProducts(bool trackChanges);
         IQueryable<Product> GetShowCaseProducts(bool trackChanges);
-        IQueryable<Product>GettAllProductsWithDetails(ProductRequestParameters p);   
+        IQueryable<Product>GettAllProductsWithDetails(ProductRequestParameters p);
+        IQueryable<Product> ProductsWithSearch(string searchTerm);
         Product? GetOneProduct(int id, bool trackChanges);
         void CreateOneProduct(Product product);
         void DeleteOneProduct(Product product);
         void UpdateOneProduct(Product entity);
         //void RemoveProductColors(int productId);
+
     }
 }

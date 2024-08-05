@@ -8,9 +8,16 @@
     <div class="nav-switch">
         <i class="fa fa-bars"></i>
     </div>
-    <div class="header-right">
+    <div class="header-right d-flex gap-2">
+        <form asp-controller="Product" asp-action="SearchingBar" method="post">
+            <div class="d-flex">
+                <input type="text" name="searchTerm" placeholder="Search" />
+                <button type="submit">
+                    <i class="fa-solid fa-magnifying-glass" style="color: #000;"></i>
+                </button>
+            </div>
+        </form>
         <a href="#" class="card-bag" id="cartButton"><i class="fas fa-cart-shopping" style="color: #000;"></i><span></span></a>
-        <a href="#" class="search"><i class="fa-solid fa-magnifying-glass" style="color: #000;"></i></a>
     </div>
     <!-- site menu -->
     <ul class="main-menu">
