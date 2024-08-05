@@ -84,6 +84,7 @@ namespace StoreApp.Infrastructure.Extensions
             services.AddScoped<ICountryService, CountryManager>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddScoped<ISMSService, SMSManager>();
         }
         public static void ConfigureRouting(this IServiceCollection services)
         {

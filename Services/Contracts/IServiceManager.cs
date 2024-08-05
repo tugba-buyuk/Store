@@ -17,6 +17,7 @@ namespace Services.Contracts
         ICountryService CountryService { get; }
         ICityService CityService { get; }
         IEmailService EmailService { get; }
+        ISMSService SMSService { get; }
         
     }
 }

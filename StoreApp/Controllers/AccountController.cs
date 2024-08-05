@@ -110,6 +110,7 @@ namespace StoreApp.Controllers
             {
                 UserName = model.UserName,
                 Email = model.Email,
+                PhoneNumber = model.PhoneNumber
             };
             var result = await _userManager.CreateAsync(user, model.Password);
 
@@ -129,9 +130,9 @@ namespace StoreApp.Controllers
                         subject: "Confirm your email",
                         body: $"Please click the following link to confirm your email: <a href={confirmationLink}>Confirm Email</a>"
                     );
-
+                    var message = $"Your registration on our website has been completed with the username {user.UserName} and email address {user.Email}. Please confirm your account by verifying the email sent to you in order to start using your account.";
                     await _manager.EmailService.Send(emailMessage);
-
+                    _manager.SMSService.SendSms(user.PhoneNumber,message);
                     return RedirectToAction("Login", new { ReturnUrl = "/" });
                 }
             }

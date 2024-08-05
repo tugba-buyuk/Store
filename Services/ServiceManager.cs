@@ -18,10 +18,11 @@ namespace Services
         private readonly ICountryService _countryService;
         private readonly ICityService _cityService;
         private readonly IEmailService _emailService;
+        private readonly ISMSService _smsService;
 
         public ServiceManager(IProductService productService, ICategoryService categoryService, IOrderService orderService,
             IAuthService authService, IColorService colorService, ICouponCodeService couponCodeService, ICountryService countryService,
-            ICityService cityService, IEmailService emailService)
+            ICityService cityService, IEmailService emailService, ISMSService smsService)
         {
             _productService = productService;
             _categoryService = categoryService;
@@ -32,6 +33,7 @@ namespace Services
             _countryService = countryService;
             _cityService = cityService;
             _emailService = emailService;
+            _smsService = smsService;
         }
 
         public IProductService ProductService => _productService;
@@ -46,5 +48,6 @@ namespace Services
         public ICountryService CountryService => _countryService;
         public ICityService CityService => _cityService;    
         public IEmailService EmailService => _emailService;
+        public ISMSService SMSService => _smsService;
     }
 }

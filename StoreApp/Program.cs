@@ -8,7 +8,9 @@ using Services;
 using Services.Contracts;
 using StoreApp.Infrastructure.Extensions;
 using Stripe;
+using Twilio;
 using System.Net.Mail;
+using Entities.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureAuthentication(builder.Configuration);
@@ -25,6 +27,9 @@ builder.Services.ConfigureIdentity();
 builder.Services.ConfigureRepositoryRegistration();
 builder.Services.ConfigureServiceRegistration();
 builder.Services.ConfigureApplicationCookie();
+
+builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("Twilio"));
+
 
 builder.Services.ConfigureRouting();
 builder.Services.AddFluentEmail(builder.Configuration);
