@@ -4,6 +4,7 @@ using Services.Contracts;
 using StoreApp.Models;
 using Stripe;
 using Stripe.Checkout;
+using Twilio.TwiML.Fax;
 
 namespace StoreApp.Controllers
 {
@@ -66,7 +67,7 @@ namespace StoreApp.Controllers
 
             var options = new SessionCreateOptions
             {
-                SuccessUrl = domain + $"/Checkout/Success",
+                SuccessUrl = $"{domain}/Checkout/Success?orderId={order.OrderId}",
                 CancelUrl = domain + "/account/login",
                 LineItems = new List<SessionLineItemOptions>(),
                 Mode = "payment"
@@ -116,6 +117,37 @@ namespace StoreApp.Controllers
             Session session = service.Create(options);
             Response.Headers.Add("Location", session.Url);
             return new StatusCodeResult(303);
+        }
+
+        public async Task<IActionResult> Success([FromQuery] int orderId)
+        {
+            var order=_manager.OrderService.GetOneOrder(orderId);
+
+            var emailMessage = new EmailMessageModel(
+                toAddress: order.Email,
+                subject: "Payment Successfully Completed",
+                body: $@"
+                Dear {order.FullName},
+    
+                Thank you for your payment! Your order has been successfully processed.
+
+                Order Details:
+                - Order ID: {order.OrderId}
+                - Total Amount: ${order.TotalPrice}
+
+                Items Purchased:
+                {string.Join(Environment.NewLine, order.Lines.Select(item =>
+                    $"- {item.Product.ProductName} - Quantity: {item.Quantity} - Price: ${item.Product.Price}"))}
+
+                If you have any questions or need further assistance, please feel free to contact us.
+
+                Thank you for choosing our service!
+                "
+            );
+            var message = $"Dear {order.FullName}, your order of {order.TotalPrice} dollars has been successfully received.It will be shipped as soon as possible.Thank you for choosing us.";
+            await _manager.EmailService.Send(emailMessage);
+            _manager.SMSService.SendSms(order.PhoneNumber, message);
+            return View(order);
         }
     }
 }

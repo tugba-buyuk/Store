@@ -159,11 +159,14 @@ namespace StoreApp.Controllers
             {
                 return BadRequest("Invalid user.");
             }
+            var message = $"Dear {user.UserName}, your account has been approved successfully.Thank you for choosing us.";
 
             var result = await _userManager.ConfirmEmailAsync(user, token);
             if (result.Succeeded)
             {
+                _manager.SMSService.SendSms(user.PhoneNumber, message);
                 return View("ConfirmEmail");
+                
             }
 
             return View("Error");
