@@ -16,7 +16,6 @@ namespace Entities.Dtos
         public int Rating { get; init; }
         public string CommentText { get; init; } = string.Empty;
         public DateTime CreatedDate { get; init; }
-        public Product Product { get; init; }
-        public IdentityUser User { get; init; }
+
     }
 }

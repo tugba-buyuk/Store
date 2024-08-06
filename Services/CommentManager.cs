@@ -43,6 +43,11 @@ namespace Services
             }
         }
 
+        public Comment GetComment(int commentId, bool trackChanges)
+        {
+            return _manager.Comment.GetOneComment(commentId, trackChanges);
+        }
+
         public IEnumerable<Comment> GetCommentsForProduct(int productId, bool trackChanges)
         {
             return _manager.Comment.GetAllCommentForProduct(productId, trackChanges);
@@ -51,6 +56,8 @@ namespace Services
         public void UpdateComment(CommentDtoForUpdate commentDto, string userId)
         {
             Comment comment = _mapper.Map<Comment>(commentDto);
+            comment.Id=commentDto.CommentId;
+            comment.CreatedDate=commentDto.CreatedDate;
             _manager.Comment.UpdateComment(comment, userId);
             _manager.Save();
             

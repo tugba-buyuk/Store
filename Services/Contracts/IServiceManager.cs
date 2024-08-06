@@ -18,6 +18,6 @@ namespace Services.Contracts
         ICityService CityService { get; }
         IEmailService EmailService { get; }
         ISMSService SMSService { get; }
-        
+        ICommentService CommentService { get; }
     }
 }

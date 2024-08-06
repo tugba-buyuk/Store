@@ -37,7 +37,14 @@ namespace StoreApp.Controllers
 
         public IActionResult Get([FromRoute(Name ="id")] int id)
         {
-            var model= _manager.ProductService.GetOneProduct(id, false);
+            var product= _manager.ProductService.GetOneProduct(id, false);
+            var comments=_manager.CommentService.GetCommentsForProduct(id,false);
+            var model = new ProductDetailViewModel
+            {
+                Product = product,
+                Comments= comments
+            };
+
             return View(model);
         }
 

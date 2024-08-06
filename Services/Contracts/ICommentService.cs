@@ -14,5 +14,6 @@ namespace Services.Contracts
         void UpdateComment(CommentDtoForUpdate commentDto, string userId);
         void DeleteComment(int commentId, string userId);
         IEnumerable<Comment> GetCommentsForProduct(int productId,bool trackChanges);
+        Comment GetComment(int commentId, bool trackChanges);
     }
 }
