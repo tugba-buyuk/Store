@@ -11,7 +11,7 @@ using Repositories;
 namespace StoreApp.Migrations
 {
     [DbContext(typeof(RepositoryContext))]
-    [Migration("20240805004236_init")]
+    [Migration("20240806123516_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -702,6 +702,38 @@ namespace StoreApp.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Entities.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CommentText")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("Entities.Models.Country", b =>
                 {
                     b.Property<int>("CountryId")
@@ -1006,19 +1038,19 @@ namespace StoreApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "a33a1c02-7d96-42f2-9c10-c52422f921d7",
+                            Id = "0d54a4b5-3960-486b-b922-69a6087a1080",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "553b8637-0b8b-4167-8cbc-67c2b33a9a50",
+                            Id = "6edd6567-358f-4070-9c0a-295d1e1e3dff",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "52d3c648-ab9a-44d6-9af4-aa10397a3e2d",
+                            Id = "03c1c1b6-f711-45a1-9566-ec27d3556489",
                             Name = "Editor",
                             NormalizedName = "EDITOR"
                         });
@@ -1203,6 +1235,25 @@ namespace StoreApp.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Entities.Models.Comment", b =>
+                {
+                    b.HasOne("Entities.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Entities.Models.PrdImage", b =>

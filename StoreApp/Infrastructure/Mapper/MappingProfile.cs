@@ -19,6 +19,8 @@ namespace StoreApp.Infrastructure.Mapper
             CreateMap<UserDtoUpdate,IdentityUser>().ReverseMap();
             CreateMap<CouponCodeDtoForCreate , CouponCode>();
             CreateMap<CouponCodeDtoForUpdate , CouponCode>().ReverseMap();
+            CreateMap<CommentDtoForCreate , Comment>();
+            CreateMap<CommentDtoForUpdate , Comment>().ReverseMap();
         }
     }
 }

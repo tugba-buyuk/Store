@@ -15,6 +15,7 @@ namespace Repositories.Contracts
         ICouponCodeRepository CouponCode { get; }
         ICountryRepository Country { get; }
         ICityRepository City { get; }
+        ICommentRepository Comment { get; }
         void Save();
     }
 }

@@ -1,35 +1,176 @@
 ﻿@using StoreApp.Infrastructure.Extensions
-@model Product
+@using System.Security.Claims
+@model ProductDetailViewModel
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="text-center">
-            <h6 class="display-6">
-                @Model.ProductName
-            </h6>
+<div class="container">
+    <div class="row w-100">
+        <div class="col-md-12">
+            <div class="text-center">
+                <h6 class="display-6">
+                    @Model.Product.ProductName
+                </h6>
 
-            @* <img class="img-fluid shadow rounded-3 my-3" src="@Model?.ImageUrl" alt="@Model.ProductName" /> *@
+                <img class="img-fluid shadow rounded-3 my-3" src="@Model.Product.MainImageUrl" alt="@Model.Product.ProductName" />
 
-            <p class="lead text-danger">@Model.Price.ToString("c")</p>
+                <p class="lead text-danger">@Model.Product.Price.ToString("c")</p>
+            </div>
         </div>
     </div>
-</div>
 
+    <div class="btn-group text-center">
+        <a class="btn btn-primary" asp-controller="Home" asp-action="Index">
+            <i class="fa-solid fa-house"></i>
+            Home
+        </a>
+        <a class="btn btn-outline-primary" asp-controller="Product" asp-action="Index">
+            <i class="fa-solid fa-list"></i>
+            Products
+        </a>
+        <form id="@Model.Product.Id" asp-page="/cart" method="post">
+            <input type="hidden" asp-for="Product.Id" name="productId" />
+            <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+            <button type="submit" class="btn btn-outline-primary">
+                <i class="fa fa-cart-plus"></i>
+            </button>
+        </form>
+    </div>
 
-<div class="btn-group text-center">
-    <a class="btn btn-primary" asp-controller="Home" asp-action="Index">
-        <i class="fa-solid fa-house"></i>
-        Home
-    </a>
-    <a class="btn btn-outline-primary" asp-controller="Product" asp-action="Index">
-        <i class="fa-solid fa-list"></i>
-        Products
-    </a>
-    <form id="@Model.Id" asp-page="/cart" method="post">
-        <input type="hidden" asp-for="Id" name="productId" />
-        <input type="hidden" name="returnUrl" value="@ViewContext.HttpContext.Request.PathAndQuery()" />
-        <button type="submit" class="btn btn-outline-primary">
-            <i class="fa fa-cart-plus"></i>
-        </button>
-    </form>
+    <!-- Comments Section -->
+    <div class="mt-4">
+        <h4>Customer Comments</h4>
+        @if (Model.Comments != null && Model.Comments.Any())
+        {
+            <ul class="list-unstyled">
+                @foreach (var comment in Model.Comments)
+                {
+                    <li class="mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="card-title">@comment.User.UserName</h6>
+                                        <p class="card-text">@comment.CommentText</p>
+                                        <p class="text-muted">@comment.CreatedDate.ToShortDateString()</p>
+                                        <div class="rating">
+                                            @for (int i = 0; i < comment.Rating; i++)
+                                            {
+                                                <i class="fa fa-star"></i>
+                                            }
+                                            @for (int i = comment.Rating; i < 5; i++)
+                                            {
+                                                <i class="fa fa-star-o"></i>
+                                            }
+                                        </div>
+                                    </div>
+                                    @if (User.Identity.IsAuthenticated && comment.User.Id == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                                    {
+                                        <div>
+                                            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#commentActionsModal-@comment.Id">
+                                                <i class="fa fa-ellipsis-v"></i>
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>No comments yet.</p>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#CommentModal">
+                Add Comment
+            </button>
+        }
+    </div>
+
+    <!-- Modal for Adding Comment -->
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="modal fade" id="CommentModal" tabindex="-1" aria-labelledby="CommentModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="CommentModalLabel">Add a Comment</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form asp-action="AddComment" asp-controller="Comment" method="post">
+                            <input type="hidden" name="ProductId" value="@Model.Product.Id" />
+                            <input type="hidden" name="UserId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+
+                            <div class="form-group">
+                                <label for="Rating">Rating:</label>
+                                <select name="Rating" id="Rating" class="form-control">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="Content">Comment:</label>
+                                <textarea name="CommentText" id="CommentText" class="form-control" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2">Submit Comment</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>You need to be logged in to submit a comment. <a href="/Account/Login">Login here</a></p>
+    }
+
+    <!-- Modals for Comment Actions -->
+    @foreach (var comment in Model.Comments)
+    {
+        @if (User.Identity.IsAuthenticated && comment.User.Id == User.FindFirstValue(ClaimTypes.NameIdentifier))
+        {
+            <div class="modal fade" id="commentActionsModal-@comment.Id" tabindex="-1" aria-labelledby="commentActionsModalLabel-@comment.Id" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="commentActionsModalLabel-@comment.Id">Comment Actions</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Update Comment Modal Form -->
+                            <form asp-action="UpdateComment" asp-controller="Comment" method="post">
+                                <input type="hidden" name="CommentId" value="@comment.Id" />
+                                <input type="hidden" name="ProductId" value="@Model.Product.Id" />
+                                <input type="hidden" name="UserId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+                                <div class="form-group">
+                                    <label for="UpdateRating-@comment.Id">Rating:</label>
+                                    <select name="Rating" id="UpdateRating-@comment.Id" class="form-control">
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <option value="@i">@i</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="UpdateCommentText-@comment.Id">Comment:</label>
+                                    <textarea name="CommentText" id="UpdateCommentText-@comment.Id" class="form-control" rows="3">@comment.CommentText</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary mt-2">Update Comment</button>
+                            </form>
+
+                            <!-- Delete Comment Form -->
+                            <form asp-action="DeleteComment" asp-controller="Comment" method="post" class="mt-2">
+                                <input type="hidden" name="ProductId" value="@Model.Product.Id" />
+                                <input type="hidden" name="UserId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+                                <input type="hidden" name="CommentId" value="@comment.Id" />
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
 </div>

@@ -67,6 +67,7 @@ namespace StoreApp.Infrastructure.Extensions
             services.AddScoped<ICouponCodeRepository, CouponCodeRepository>();
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
 
 
         }
@@ -85,6 +86,7 @@ namespace StoreApp.Infrastructure.Extensions
             services.AddScoped<IEmailService, EmailService>();
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<ISMSService, SMSManager>();
+            services.AddScoped<ICommentService,CommentManager>();   
         }
         public static void ConfigureRouting(this IServiceCollection services)
         {
