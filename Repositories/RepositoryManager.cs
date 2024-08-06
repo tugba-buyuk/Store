@@ -18,11 +18,12 @@ namespace Repositories
         private readonly ICouponCodeRepository _couponCodeRepository;
         private readonly ICountryRepository _countryRepository;
         private readonly ICityRepository _cityRepository;
+        private readonly ICommentRepository _commentRepository;
 
 
         public RepositoryManager(IProductRepository productRepository, RepositoryContext context, ICategoryRepository categoryRepository,
             IOrderRepository orderRepository, IColorRepository colorRepository, ICouponCodeRepository couponCodeRepository,ICountryRepository countryRepository,
-            ICityRepository cityRepository )
+            ICityRepository cityRepository, ICommentRepository commentRepository )
         {
             _productRepository = productRepository;
             _context = context;
@@ -32,6 +33,7 @@ namespace Repositories
             _couponCodeRepository = couponCodeRepository;
             _countryRepository = countryRepository;
             _cityRepository = cityRepository;
+            _commentRepository = commentRepository;
         }
 
         public IProductRepository Product => _productRepository;
@@ -45,6 +47,7 @@ namespace Repositories
         public ICountryRepository Country => _countryRepository;
         public ICityRepository City => _cityRepository;
 
+        public ICommentRepository Comment => _commentRepository;
         public void Save()
         {
             _context.SaveChanges();

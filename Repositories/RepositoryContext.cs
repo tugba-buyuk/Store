@@ -15,6 +15,7 @@ public class RepositoryContext : IdentityDbContext<IdentityUser>
     public DbSet<Order> Orders { get; set; }
     public DbSet<Color> Colors { get; set; }
     public DbSet<CouponCode> CouponCodes { get; set; }
+    public DbSet<Comment> Comments { get; set; }
     public RepositoryContext(DbContextOptions<RepositoryContext> options)
     : base(options)
     {

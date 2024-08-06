@@ -308,6 +308,35 @@ namespace StoreApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    Rating = table.Column<int>(type: "INTEGER", nullable: false),
+                    CommentText = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Comments_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PrdImage",
                 columns: table => new
                 {
@@ -332,9 +361,9 @@ namespace StoreApp.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "52d3c648-ab9a-44d6-9af4-aa10397a3e2d", null, "Editor", "EDITOR" },
-                    { "553b8637-0b8b-4167-8cbc-67c2b33a9a50", null, "Admin", "ADMIN" },
-                    { "a33a1c02-7d96-42f2-9c10-c52422f921d7", null, "User", "USER" }
+                    { "03c1c1b6-f711-45a1-9566-ec27d3556489", null, "Editor", "EDITOR" },
+                    { "0d54a4b5-3960-486b-b922-69a6087a1080", null, "User", "USER" },
+                    { "6edd6567-358f-4070-9c0a-295d1e1e3dff", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
@@ -529,6 +558,16 @@ namespace StoreApp.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comments_ProductId",
+                table: "Comments",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_UserId",
+                table: "Comments",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PrdImage_ProductId",
                 table: "PrdImage",
                 column: "ProductId");
@@ -567,6 +606,9 @@ namespace StoreApp.Migrations
                 name: "Colors");
 
             migrationBuilder.DropTable(
+                name: "Comments");
+
+            migrationBuilder.DropTable(
                 name: "Country");
 
             migrationBuilder.DropTable(
@@ -579,10 +621,10 @@ namespace StoreApp.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Products");
