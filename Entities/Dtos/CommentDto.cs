@@ -15,7 +15,7 @@ namespace Entities.Dtos
         public string UserId { get; init; }
         public int Rating { get; init; }
         public string CommentText { get; init; } = string.Empty;
-        public DateTime CreatedDate { get; init; }
+        public DateTime CreatedDate { get; init; }= DateTime.UtcNow;
 
     }
 }
