@@ -26,14 +26,14 @@ namespace StoreApp.Controllers
                 return RedirectToAction("Get", "Product", new { id = commentDto.ProductId });
             }
 
-            var comment = new Comment
-            {
-                ProductId = commentDto.ProductId,
-                Rating = commentDto.Rating,
-                CommentText = commentDto.CommentText,
-                UserId = commentDto.UserId,
-                CreatedDate = DateTime.Now
-            };
+            //var comment = new Comment
+            //{
+            //    ProductId = commentDto.ProductId,
+            //    Rating = commentDto.Rating,
+            //    CommentText = commentDto.CommentText,
+            //    UserId = commentDto.UserId,
+            //    CreatedDate = DateTime.Now
+            //};
 
             _manager.CommentService.CreateComment(commentDto);
 

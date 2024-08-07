@@ -38,6 +38,9 @@
     <!-- Comments Section -->
     <div class="mt-4">
         <h4>Customer Comments</h4>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#CommentModal">
+            Add Comment
+        </button>
         @if (Model.Comments != null && Model.Comments.Any())
         {
             <ul class="list-unstyled">
@@ -80,10 +83,9 @@
         else
         {
             <p>No comments yet.</p>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#CommentModal">
-                Add Comment
-            </button>
+           
         }
+        
     </div>
 
     <!-- Modal for Adding Comment -->

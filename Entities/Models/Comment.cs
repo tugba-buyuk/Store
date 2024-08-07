@@ -14,7 +14,7 @@ namespace Entities.Models
         public string UserId { get; set; }
         public int Rating { get; set; }
         public string CommentText { get; set; } = string.Empty;
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
         public Product Product { get; set; }
         public IdentityUser User { get; set; }
     }
