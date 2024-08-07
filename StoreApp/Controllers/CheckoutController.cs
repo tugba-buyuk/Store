@@ -79,7 +79,7 @@ namespace StoreApp.Controllers
                 {
                     PriceData = new SessionLineItemPriceDataOptions
                     {
-                        UnitAmount = (long)((item.Product.Price * item.Quantity) * 100),
+                        UnitAmount = (long)((item.Product.Price) * 100),
                         Currency = "usd",
                         ProductData = new SessionLineItemPriceDataProductDataOptions
                         {
@@ -89,6 +89,7 @@ namespace StoreApp.Controllers
                     },
                     Quantity = item.Quantity
                 };
+                
                 options.LineItems.Add(sessionListItem);
             }
             var couponService = new CouponService();
