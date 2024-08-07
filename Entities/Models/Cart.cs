@@ -21,7 +21,10 @@ namespace Entities.Models
 
         public virtual void AddItem(Product product, int quantity, string color, string size)
         {
-            CartLine? line = Lines.Where(l => l.Product.Id == product.Id).FirstOrDefault();
+            CartLine? line = Lines.FirstOrDefault(l =>
+                l.Product.Id == product.Id &&
+                l.Color == color &&
+                l.Size == size);
 
             if (line is null)
             {

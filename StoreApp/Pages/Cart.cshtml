@@ -12,6 +12,8 @@
                         <tr>
                             <th>Product</th>
                             <th>Price</th>
+                            <th>Color</th>
+                            <th>Size</th>
                             <th>Quantity</th>
                             <th>Actions</th> 
                         </tr>
@@ -27,6 +29,8 @@
                                     @line.Product.ProductName
                                 </td>
                                 <td>@line.Product.Price.ToString("c")</td>
+                                <td>@line.Color</td>
+                                <td>@line.Size</td>
                                 <td>@line.Quantity</td>
                                 <td>
                                     <form action="/Cart?handler=Remove" method="post">
